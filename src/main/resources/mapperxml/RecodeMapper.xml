@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.RecodeMapper">
+  <resultMap id="BaseResultMap" type="com.example.entity.Recode">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="valueM" jdbcType="VARCHAR" property="valuem" />
+    <result column="valueA" jdbcType="VARCHAR" property="valuea" />
+    <result column="valueN" jdbcType="VARCHAR" property="valuen" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="theday" jdbcType="VARCHAR" property="theday" />
+    <result column="thewek" jdbcType="VARCHAR" property="thewek" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, valueM, valueA, valueN, uid, theday, thewek
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from recode
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from recode
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.example.entity.Recode">
+    insert into recode (id, valueM, valueA, 
+      valueN, uid, theday, 
+      thewek)
+    values (#{id,jdbcType=INTEGER}, #{valuem,jdbcType=VARCHAR}, #{valuea,jdbcType=VARCHAR}, 
+      #{valuen,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, #{theday,jdbcType=VARCHAR}, 
+      #{thewek,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.entity.Recode">
+    insert into recode
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="valuem != null">
+        valueM,
+      </if>
+      <if test="valuea != null">
+        valueA,
+      </if>
+      <if test="valuen != null">
+        valueN,
+      </if>
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="theday != null">
+        theday,
+      </if>
+      <if test="thewek != null">
+        thewek,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="valuem != null">
+        #{valuem,jdbcType=VARCHAR},
+      </if>
+      <if test="valuea != null">
+        #{valuea,jdbcType=VARCHAR},
+      </if>
+      <if test="valuen != null">
+        #{valuen,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="theday != null">
+        #{theday,jdbcType=VARCHAR},
+      </if>
+      <if test="thewek != null">
+        #{thewek,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.entity.Recode">
+    update recode
+    <set>
+      <if test="valuem != null">
+        valueM = #{valuem,jdbcType=VARCHAR},
+      </if>
+      <if test="valuea != null">
+        valueA = #{valuea,jdbcType=VARCHAR},
+      </if>
+      <if test="valuen != null">
+        valueN = #{valuen,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="theday != null">
+        theday = #{theday,jdbcType=VARCHAR},
+      </if>
+      <if test="thewek != null">
+        thewek = #{thewek,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.entity.Recode">
+    update recodegetUserRecodeByUid7days
+    set valueM = #{valuem,jdbcType=VARCHAR},
+      valueA = #{valuea,jdbcType=VARCHAR},
+      valueN = #{valuen,jdbcType=VARCHAR},
+      uid = #{uid,jdbcType=INTEGER},
+      theday = #{theday,jdbcType=VARCHAR},
+      thewek = #{thewek,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectNumByDay" parameterType="com.example.entity.Recode" resultMap="BaseResultMap">
+    SELECT count(*) from recode where theday like '${theday}' and uid = #{uid}
+  </select>
+  <update id="updateRecodeByIdDay" parameterType="com.example.entity.Recode">
+    UPDATE recode set valueM = #{valueM},valueA = #{valueA},valueN = #{valueN} where uid = #{uid} and theday like '${theday}'
+  </update>
+  <select id="getUserRecodeByUid7days" resultMap="BaseResultMap">
+    SELECT * from recode where uid = #{uid} and date(theday) BETWEEN CURDATE() and DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+  </select>
+</mapper>
