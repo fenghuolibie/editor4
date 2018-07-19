@@ -42,10 +42,15 @@ public class RecodeServiceImpl implements IRecodeService {
     }
 
     @Override
-    public int getUserRecode(int userid) {
+    public List<Recode> getUserRecode(int userid) {
         //1代表礼拜天，2代表礼拜一;
-        Integer date = Integer.parseInt(DateUtil.getCurrentDate()) + 2 - Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        date.toString();
-        return 0;
+//        Integer date = Integer.parseInt(DateUtil.getCurrentDate()) + 2 - Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+//        date.toString();
+        int dayWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        if(dayWeek==1){
+            dayWeek = 8;
+        }
+        Integer date = Integer.parseInt(DateUtil.getCurrentDate()) + 2-dayWeek;
+        return  recodeMapper.getUserRecodeByUid7days(userid,date.toString());
     }
 }
