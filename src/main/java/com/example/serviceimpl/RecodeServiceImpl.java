@@ -2,9 +2,6 @@ package com.example.serviceimpl;
 
 import com.example.common.util.DateUtil;
 import com.example.dto.UserDayRecodeDTO;
-import com.example.entity.Recode;
-import com.example.entity.User;
-import com.example.mapper.RecodeMapper;
 import com.example.service.IRecodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

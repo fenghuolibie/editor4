@@ -1,9 +1,7 @@
 package com.example.serviceimpl;
 
 import com.example.dto.LoginMessageDTO;
-import com.example.entity.User;
 import com.example.enums.LoginEnum;
-import com.example.mapper.UserMapper;
 import com.example.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
