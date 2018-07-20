@@ -1,7 +1,9 @@
 package com.example.serviceimpl;
 
 import com.example.dto.LoginMessageDTO;
+import com.example.entity.User;
 import com.example.enums.LoginEnum;
+import com.example.mapper.UserMapper;
 import com.example.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -31,7 +34,7 @@ public class UserServiceImpl implements IUserService {
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class, readOnly = true)
     public String checkUser(LoginMessageDTO loginMessageDTO,HttpServletRequest Request) {
         String name = loginMessageDTO.getUserName();
-        if (userMapper.selectNumByName(name) == 0) {
+        if (userMapper.selectNumByLogin(loginMessageDTO) == 0) {
             return LoginEnum.USER_NULL.getMessage();
         }
         if(!userMapper.selectPasswordByName(name).equals(loginMessageDTO.getPassWord())) {
@@ -40,5 +43,11 @@ public class UserServiceImpl implements IUserService {
         User user = userMapper.selectUserByName(name);
         Request.getSession().setAttribute("userbean",user);
         return LoginEnum.SUCCESS.getMessage();
+    }
+
+    @Override
+    public List<String> getAllname(int depament) {
+        String
+        return userMapper.selectAllNameByDepament(null);
     }
 }

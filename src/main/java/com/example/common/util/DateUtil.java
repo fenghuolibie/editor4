@@ -13,7 +13,7 @@ public class DateUtil {
      * @return
      */
     public static String getCurrentDate() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         return simpleDateFormat.format(new Date());
     }
 }

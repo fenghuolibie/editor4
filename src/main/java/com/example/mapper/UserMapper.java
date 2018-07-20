@@ -1,7 +1,10 @@
 package com.example.mapper;
 
+import com.example.dto.LoginMessageDTO;
 import com.example.entity.User;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Integer id);
@@ -16,9 +19,11 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User record);
 
-    int selectNumByName(@Param("name") String name);
+    int selectNumByLogin(LoginMessageDTO loginMessageDTO);
 
     String selectPasswordByName(@Param("name") String name);
 
     User selectUserByName(@Param("name") String name);
+
+    List<String> selectAllNameByDepament(@Param("dname") String dname);
 }

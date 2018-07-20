@@ -2,12 +2,16 @@ package com.example.serviceimpl;
 
 import com.example.common.util.DateUtil;
 import com.example.dto.UserDayRecodeDTO;
+import com.example.entity.Recode;
+import com.example.entity.User;
+import com.example.mapper.RecodeMapper;
 import com.example.service.IRecodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
 import java.util.List;
 
@@ -29,7 +33,7 @@ public class RecodeServiceImpl implements IRecodeService {
         List<Recode> list = userDayRecodeDTO.getWeeks();
         for (Recode recode : list) {
             if (recodeMapper.selectNumByDay(recode) == 0) {
-                recode.setId(id);
+                recode.setUid(id);
                 recodeMapper.insert(recode);
             } else {
                 recodeMapper.updateRecodeByIdDay(recode);
@@ -38,7 +42,12 @@ public class RecodeServiceImpl implements IRecodeService {
         return 1;
     }
 
-    @Override
+    /**
+     * 查询本周的
+     * @param userid
+     * @return
+     */
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class, readOnly = true)
     public List<Recode> getUserRecode(int userid) {
         //1代表礼拜天，2代表礼拜一;
 //        Integer date = Integer.parseInt(DateUtil.getCurrentDate()) + 2 - Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
@@ -48,6 +57,19 @@ public class RecodeServiceImpl implements IRecodeService {
             dayWeek = 8;
         }
         Integer date = Integer.parseInt(DateUtil.getCurrentDate()) + 2-dayWeek;
-        return  recodeMapper.getUserRecodeByUid7days(userid,date.toString());
+        return  recodeMapper.selectUserRecodeByUid7days(userid,date.toString());
+    }
+
+    /**
+     * 条件查询一些数据
+     * @param theDay
+     * @param UserName
+     * @param request
+     * @return
+     */
+    @Override
+    public List<UserDayRecodeDTO> getRecodeCondition(String theDay, String UserName, HttpServletRequest request) {
+
+        return null;
     }
 }

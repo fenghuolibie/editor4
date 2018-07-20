@@ -41,4 +41,10 @@ public class UserInfoController {
         return commonResult;
     }
 
+    @ApiOperation(value = "查询当前登陆部门所有人的名字", httpMethod = "POST")
+    @GetMapping("/getAllName")
+    public CommonResult getAllName(HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("userbean");
+        userService.getAllname(user.getDepartment());
+    }
 }

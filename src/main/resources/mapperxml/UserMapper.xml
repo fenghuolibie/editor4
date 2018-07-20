@@ -90,8 +90,8 @@
       passWord = #{passWord,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectNumByName" resultType="int">
-    select count(*) FROM `user` WHERE `username` like '${name}'
+  <select id="selectNumByLogin" parameterType="com.example.dto.LoginMessageDTO" resultType="int">
+    SELECT count(*) FROM `user` u join department d on u.department = d.id and `username` like '${userName}' and d.dName like '${department}'
   </select>
   <select id="selectPasswordByName" resultType="String">
     select `password` FROM `user` WHERE `username` like '${name}'
@@ -99,5 +99,7 @@
   <select id="selectUserByName" resultMap="BaseResultMap">
     select * FROM `user` WHERE `username` like '${name}'
   </select>
-
+  <select id="selectAllNameByDepament" resultType="String">
+    select username FROM user u JOIN department d  ON u.department = d.id and d.dName like '${dname}'
+  </select>
 </mapper>
