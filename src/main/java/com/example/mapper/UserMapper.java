@@ -1,6 +1,7 @@
 package com.example.mapper;
 
-import com.example.entity.User;import org.apache.ibatis.annotations.Param;
+import com.example.entity.User;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Integer id);

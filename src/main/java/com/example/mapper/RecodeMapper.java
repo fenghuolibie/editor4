@@ -27,5 +27,5 @@ public interface RecodeMapper {
      * @param uid
      * @return
      */
-    List<Recode> getUserRecodeByUid7days (@Param("uid") int uid);
+    List<Recode> getUserRecodeByUid7days (@Param("uid") int uid, @Param("day") String day);
 }
