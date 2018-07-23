@@ -12,6 +12,6 @@ public class User {
 
     private Integer department;
 
-    private String passWord;
+    private String pass_Word;
 
 }
