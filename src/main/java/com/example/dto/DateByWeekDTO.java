@@ -4,8 +4,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class DateByWeek {
-    @ApiModelProperty(value = "日期",example = "20180716")
+public class DateByWeekDTO {
+//    @JsonIgnore()
+    @ApiModelProperty(value = "姓名",example = "张三")
+    private String userName;
+    @ApiModelProperty(value = "日期",example = "2018-07-16 22:22:22")
     private String theday;
     @ApiModelProperty(value = "星期",example = " 星期二")
     private String theWek;
@@ -15,4 +18,5 @@ public class DateByWeek {
     private String valueA;
     @ApiModelProperty(value = "晚上午内容",example = "晚上内容")
     private String valueN;
+    private String write;
 }

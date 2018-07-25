@@ -3,15 +3,17 @@
 <mapper namespace="com.example.mapper.RecodeMapper">
   <resultMap id="BaseResultMap" type="com.example.entity.Recode">
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
     <result column="valueM" jdbcType="VARCHAR" property="valueM" />
     <result column="valueA" jdbcType="VARCHAR" property="valueA" />
     <result column="valueN" jdbcType="VARCHAR" property="valueN" />
-    <result column="uid" jdbcType="INTEGER" property="uid" />
-    <result column="theDay" jdbcType="VARCHAR" property="theDay" />
     <result column="theWek" jdbcType="VARCHAR" property="theWek" />
+    <result column="theDay" jdbcType="VARCHAR" property="theDay" />
+    <result column="recodeCreate" jdbcType="TIMESTAMP" property="recodeCreate" />
+    <result column="recodeModified" jdbcType="TIMESTAMP" property="recodeModified" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, valueM, valueA, valueN, uid, theDay, theWek
+    id, uid, valueM, valueA, valueN, theWek, theDay, recodeCreate, recodeModified
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,18 +26,23 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.example.entity.Recode">
-    insert into recode (id, valueM, valueA, 
-      valueN, uid, theDay, 
-      theWek)
-    values (default, #{valueM,jdbcType=VARCHAR}, #{valueA,jdbcType=VARCHAR},
-      #{valueN,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, #{theDay,jdbcType=VARCHAR}, 
-      #{theWek,jdbcType=VARCHAR})
+    insert into recode (id, uid, valueM, 
+      valueA, valueN, theWek, 
+      theDay, recodeCreate, recodeModified
+      )
+    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{valueM,jdbcType=VARCHAR}, 
+      #{valueA,jdbcType=VARCHAR}, #{valueN,jdbcType=VARCHAR}, #{theWek,jdbcType=VARCHAR}, 
+      #{theDay,jdbcType=VARCHAR}, #{recodeCreate,jdbcType=TIMESTAMP}, #{recodeModified,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.example.entity.Recode">
     insert into recode
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
+      </if>
+      <if test="uid != null">
+        uid,
       </if>
       <if test="valueM != null">
         valueM,
@@ -46,19 +53,25 @@
       <if test="valueN != null">
         valueN,
       </if>
-      <if test="uid != null">
-        uid,
+      <if test="theWek != null">
+        theWek,
       </if>
       <if test="theDay != null">
         theDay,
       </if>
-      <if test="theWek != null">
-        theWek,
+      <if test="recodeCreate != null">
+        recodeCreate,
+      </if>
+      <if test="recodeModified != null">
+        recodeModified,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=INTEGER},
       </if>
       <if test="valueM != null">
         #{valueM,jdbcType=VARCHAR},
@@ -69,20 +82,26 @@
       <if test="valueN != null">
         #{valueN,jdbcType=VARCHAR},
       </if>
-      <if test="uid != null">
-        #{uid,jdbcType=INTEGER},
+      <if test="theWek != null">
+        #{theWek,jdbcType=VARCHAR},
       </if>
       <if test="theDay != null">
         #{theDay,jdbcType=VARCHAR},
       </if>
-      <if test="theWek != null">
-        #{theWek,jdbcType=VARCHAR},
+      <if test="recodeCreate != null">
+        #{recodeCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recodeModified != null">
+        #{recodeModified,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.example.entity.Recode">
     update recode
     <set>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
       <if test="valueM != null">
         valueM = #{valueM,jdbcType=VARCHAR},
       </if>
@@ -92,26 +111,31 @@
       <if test="valueN != null">
         valueN = #{valueN,jdbcType=VARCHAR},
       </if>
-      <if test="uid != null">
-        uid = #{uid,jdbcType=INTEGER},
+      <if test="theWek != null">
+        theWek = #{theWek,jdbcType=VARCHAR},
       </if>
       <if test="theDay != null">
         theDay = #{theDay,jdbcType=VARCHAR},
       </if>
-      <if test="theWek != null">
-        theWek = #{theWek,jdbcType=VARCHAR},
+      <if test="recodeCreate != null">
+        recodeCreate = #{recodeCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recodeModified != null">
+        recodeModified = #{recodeModified,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.example.entity.Recode">
     update recode
-    set valueM = #{valueM,jdbcType=VARCHAR},
+    set uid = #{uid,jdbcType=INTEGER},
+      valueM = #{valueM,jdbcType=VARCHAR},
       valueA = #{valueA,jdbcType=VARCHAR},
       valueN = #{valueN,jdbcType=VARCHAR},
-      uid = #{uid,jdbcType=INTEGER},
+      theWek = #{theWek,jdbcType=VARCHAR},
       theDay = #{theDay,jdbcType=VARCHAR},
-      theWek = #{theWek,jdbcType=VARCHAR}
+      recodeCreate = #{recodeCreate,jdbcType=TIMESTAMP},
+      recodeModified = #{recodeModified,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectNumByDay" parameterType="com.example.entity.Recode" resultType="int">
@@ -121,6 +145,52 @@
     UPDATE recode set valueM = #{valueM},valueA = #{valueA},valueN = #{valueN} where uid = #{uid} and theday like '${theDay}'
   </update>
   <select id="selectUserRecodeByUid7days" resultMap="BaseResultMap">
-    SELECT * from recode where uid = #{uid} and date(theday) BETWEEN #{day} and DATE_ADD(#{day}, INTERVAL 6 DAY)
+    SELECT * from recode where uid = #{uid} and date(theday) BETWEEN #{day} and DATE_ADD(#{day}, INTERVAL 6 DAY) order By theday
+  </select>
+  <select id="selectUserByDate" resultType="int">
+    SELECT COUNT(*) FROM recode where theDay like '${theDay}' and uid = #{uid}
+  </select>
+
+  <select id="selectUserRecodeByName7days" resultType="com.example.entity.Recode">
+    SELECT valueM,valueA,valueN,theDay,theWek
+    FROM recode r JOIN `user` u ON u.id = r.uid
+    <where>
+      date(theday) BETWEEN #{theDay} AND DATE_ADD(#{theDay}, INTERVAL 6 DAY)
+      <if test="userName !=null and userName !=''">
+        and userName like '${userName}'
+      </if>
+    </where>
+    order by theDay
+  </select>
+  <select id="selectUserRecodeByMonth" resultType="com.example.dto.DateByWeekDTO">
+    SELECT u.userName,valueM,valueA,valueN,theDay,theWek
+    FROM recode r JOIN `user` u ON u.id = r.uid
+    <where>
+      r.theDay LIKE '${theDay}%'
+      <if test="userName !=null and userName !=''">
+        and userName like '${userName}'
+      </if>
+    </where>
+    order BY u.id
+  </select>
+  <select id="selectUserRecodeByQuarter" resultType="com.example.dto.DateByWeekDTO">
+    SELECT u.userName,valueM,valueA,valueN,theDay,theWek
+    FROM recode r join `user` u on r.uid = u.id
+    <where>
+      QUARTER (theDay) = #{quarter} and YEAR(theDay) = #{year}
+      <if test="userName !=null and userName !=''">
+        and userName like '${userName}'
+      </if>
+    </where>
+  </select>
+  <select id="selectUserRecodeByYear">
+    SELECT u.userName,valueM,valueA,valueN,theDay,theWek
+    FROM recode r join `user` u on r.uid = u.id
+    <where>
+      YEAR(theDay) = #{year}
+      <if test="userName !=null and userName !=''">
+        and userName like '${userName}'
+      </if>
+    </where>
   </select>
 </mapper>

@@ -11,6 +11,7 @@ public interface IUserService {
 
     String checkUser(LoginMessageDTO loginMessageDTO, HttpServletRequest httpServletRequest);
 
-    List<String> getAllname(int departmnet);
+    List<String> getDepamentAllname(int departmnet);
 
+    List<String> getAllname();
 }

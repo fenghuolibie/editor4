@@ -15,5 +15,4 @@ public class UserDayRecodeDTO {
     private String userName;
     @ApiModelProperty(value = "一周信息")
     private List<Recode> weeks = new ArrayList<Recode>(7);
-
 }

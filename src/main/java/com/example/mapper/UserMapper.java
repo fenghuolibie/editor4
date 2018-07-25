@@ -25,5 +25,7 @@ public interface UserMapper {
 
     User selectUserByName(@Param("name") String name);
 
-    List<String> selectAllNameByDepament(@Param("dname") String dname);
+    List<String> selectAllNameByDepament(@Param("department") int department);
+
+    List<String> selectAllName();
 }

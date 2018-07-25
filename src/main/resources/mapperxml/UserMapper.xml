@@ -100,6 +100,9 @@
     select * FROM `user` WHERE `username` like '${name}'
   </select>
   <select id="selectAllNameByDepament" resultType="String">
-    select username FROM user u JOIN department d  ON u.department = d.id and d.dName like '${dname}'
+    SELECT userName from `user` where department = #{department}
+  </select>
+  <select id="selectAllName" resultType="String">
+    SELECT userName from `user`
   </select>
 </mapper>
