@@ -15,20 +15,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 import java.util.Date;
 
 @Api(value = "RecodeInfoController", tags = "日清增删改查接口")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/recode")
 public class RecodeInfoController {
 
     @Autowired
     private IRecodeService recodeService;
 
     @PostMapping("/updateRecode")
-    @ApiOperation(value = "更新数据", httpMethod = "POST")
+    @ApiOperation(value = "更新当前登录用户的数据", httpMethod = "POST")
     @ApiImplicitParam(name = "userDayRecodeDTO", value = "用于封装编辑日清所需要的数据", paramType = "body", dataType = "UserDayRecodeDTO", required = true)
-    public CommonResult updateRecode(@RequestBody UserDayRecodeDTO userDayRecodeDTO, HttpServletRequest request) {
+    public CommonResult updateRecode(@RequestBody UserDayRecodeDTO userDayRecodeDTO, HttpServletRequest request) throws ParseException {
         CommonResult commonResult = new CommonResult();
         User user = (User) request.getSession().getAttribute("userbean");
         if (user == null) {
@@ -47,7 +48,7 @@ public class RecodeInfoController {
             return commonResult;
         }
         commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
-        commonResult.setResponseMessage("格式错误");
+        commonResult.setResponseMessage("格式数据错误");
         return commonResult;
 
     }
@@ -72,29 +73,30 @@ public class RecodeInfoController {
         return commonResult;
     }
 
-    @GetMapping("/getUserByCondition")
-    @ApiOperation(value = "历史条件查询所有人本周的数据日清", httpMethod = "GET")
+    @PostMapping("/getUserByCondition")
+    @ApiOperation(value = "历史条件查询所有人的数据日清", httpMethod = "POST")
+    @ApiImplicitParam(name = "recodeConditionDTO", value = "该参数用来封装查询条件数据数据", paramType = "body", dataType = "RecodeConditionDTO", required = true)
     public CommonResult getUserByCondition(@RequestBody RecodeConditionDTO recodeConditionDTO) {
         CommonResult commonResult = new CommonResult();
         commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
         commonResult.setResponseMessage("查询成功");
-//        commonResult.setResponseData(nu);
+        commonResult.setResponseData(recodeService.getRecodeCondition(recodeConditionDTO));
         return commonResult;
     }
 
     @PostMapping("/getUserByCondition2")
     @ApiOperation(value = "按周条件查询所有人本周的数据日清", httpMethod = "POST")
     @ApiImplicitParam(name = "recodeCondtion2DTO", value = "该参数用来封装查询条件数据数据", paramType = "body", dataType = "RecodeCondtion2DTO", required = true)
-    public CommonResult getUserByCondition2(@RequestBody RecodeCondtion2DTO recodeCondtion2DTO) throws Exception {
+    public CommonResult getUserByCondition2(@RequestBody RecodeCondtion2DTO recodeCondtion2DTO, HttpServletRequest request) throws Exception {
         CommonResult commonResult = new CommonResult();
-        if (recodeCondtion2DTO.getUserName() == null || recodeCondtion2DTO.getDate() == null) {
+        if (recodeCondtion2DTO.getUserName() == null || recodeCondtion2DTO.getDate() == null || !DateUtil.isValidDate(recodeCondtion2DTO.getDate())) {
             commonResult.setResponseCode(ResultCode.ERROR.getCode());
             commonResult.setResponseMessage("输入参数异常");
             return commonResult;
         }
         commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
         commonResult.setResponseMessage("查询成功");
-        commonResult.setResponseData(recodeService.getRecodeCondition2(recodeCondtion2DTO));
+        commonResult.setResponseData(recodeService.getRecodeCondition2(recodeCondtion2DTO,request));
         return commonResult;
     }
 
@@ -108,4 +110,5 @@ public class RecodeInfoController {
         commonResult.setResponseData(DateUtil.getCurrentDate(new Date()));
         return commonResult;
     }
+
 }

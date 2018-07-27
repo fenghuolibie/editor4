@@ -12,4 +12,6 @@ public class RecodeCondtion2DTO {
     private String userName;
     @ApiModelProperty(value = "yyyyMMdd的日期格式",example = "20180725")
     private String date;
+    @ApiModelProperty(value = "部门姓名",example = "信息所")
+    private String departmentName;
 }

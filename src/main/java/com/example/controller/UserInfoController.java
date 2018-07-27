@@ -42,18 +42,18 @@ public class UserInfoController {
     }
 
     @ApiOperation(value = "查询当前登陆部门所有人的名字", httpMethod = "GET")
-    @GetMapping("/getDepamentAllName")
+    @GetMapping("v1/getDepamentAllName")
     public CommonResult getDepamentAllName(HttpServletRequest request){
         CommonResult commonResult = new CommonResult();
         User user = (User) request.getSession().getAttribute("userbean");
         commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
         commonResult.setResponseMessage("查询成功");
-        commonResult.setResponseData(userService.getDepamentAllname(user.getDepartment()));
+        commonResult.setResponseData(userService.getDepamentAllname(user.getDepartmentId()));
         return commonResult;
     }
 
     @ApiOperation(value = "查询所有人的名字", httpMethod = "GET")
-    @GetMapping("/getAllName")
+    @GetMapping("v1/getAllName")
     public CommonResult getAllName(HttpServletRequest request){
         CommonResult commonResult = new CommonResult();
 //        User user = (User) request.getSession().getAttribute("userbean");

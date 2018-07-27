@@ -7,8 +7,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 
 @SpringBootApplication
 @MapperScan("com.example.mapper")
-@ServletComponentScan(basePackages = {"com.example.common.filter"})
-/*@ServletComponentScan(value = "com.example.configuration.druid")*/
+@ServletComponentScan(basePackages = {"com.example.common.filter","com.example.configuration.druid"})
 public class EditorApplication {
 
     public static void main(String[] args) {

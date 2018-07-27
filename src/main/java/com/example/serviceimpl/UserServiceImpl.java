@@ -55,7 +55,7 @@ public class UserServiceImpl implements IUserService {
      * 得到当前部门所有人员的姓名
      */
     public List<String> getDepamentAllname(int depament) {
-        return userMapper.selectAllNameByDepament(depament);
+        return userMapper.selectAllNameByDepament(depament,null);
     }
 
     @Override

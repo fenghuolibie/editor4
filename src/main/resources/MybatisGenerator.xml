@@ -39,16 +39,16 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <!--<table tableName="department"  enableCountByExample="false"-->
-               <!--enableDeleteByExample="false" enableUpdateByExample="false" enableSelectByExample="false">-->
-        <!--</table>-->
-        <!--<table tableName="user"  enableCountByExample="false"-->
-               <!--enableDeleteByExample="false" enableUpdateByExample="false" enableSelectByExample="false">-->
+        <table tableName="department"  enableCountByExample="false"
+               enableDeleteByExample="false" enableUpdateByExample="false" enableSelectByExample="false">
+        </table>
+        <table tableName="user"  enableCountByExample="false"
+               enableDeleteByExample="false" enableUpdateByExample="false" enableSelectByExample="false">
             <!--<property name="useActualColumnNames" value="true"/>-->
-        <!--</table>-->
+        </table>
         <table tableName="recode"  enableCountByExample="false"
                enableDeleteByExample="false" enableUpdateByExample="false" enableSelectByExample="false">
-            <property name="useActualColumnNames" value="true"/>
+            <!--<property name="useActualColumnNames" value="true"/>-->
         </table>
 
     </context>

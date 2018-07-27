@@ -17,5 +17,5 @@ public class LoginMessageDTO {
     private String passWord;
 
     @ApiModelProperty(value = "用户所属部门",example = "信息所")
-    private String department;
+    private String departmentName;
 }

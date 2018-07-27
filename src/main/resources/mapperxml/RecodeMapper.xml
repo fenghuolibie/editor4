@@ -3,17 +3,18 @@
 <mapper namespace="com.example.mapper.RecodeMapper">
   <resultMap id="BaseResultMap" type="com.example.entity.Recode">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="uid" jdbcType="INTEGER" property="uid" />
-    <result column="valueM" jdbcType="VARCHAR" property="valueM" />
-    <result column="valueA" jdbcType="VARCHAR" property="valueA" />
-    <result column="valueN" jdbcType="VARCHAR" property="valueN" />
-    <result column="theWek" jdbcType="VARCHAR" property="theWek" />
-    <result column="theDay" jdbcType="VARCHAR" property="theDay" />
-    <result column="recodeCreate" jdbcType="TIMESTAMP" property="recodeCreate" />
-    <result column="recodeModified" jdbcType="TIMESTAMP" property="recodeModified" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="am_content" jdbcType="VARCHAR" property="amContent" />
+    <result column="pm_content" jdbcType="VARCHAR" property="pmContent" />
+    <result column="night_content" jdbcType="VARCHAR" property="nightContent" />
+    <result column="week_day" jdbcType="VARCHAR" property="weekDay" />
+    <result column="date_time" jdbcType="VARCHAR" property="dateTime" />
+    <result column="recode_create" jdbcType="TIMESTAMP" property="recodeCreate" />
+    <result column="recode_modified" jdbcType="TIMESTAMP" property="recodeModified" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, uid, valueM, valueA, valueN, theWek, theDay, recodeCreate, recodeModified
+    id, user_id, am_content, pm_content, night_content, week_day, date_time, recode_create, 
+    recode_modified
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -26,13 +27,13 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.example.entity.Recode">
-    insert into recode (id, uid, valueM, 
-      valueA, valueN, theWek, 
-      theDay, recodeCreate, recodeModified
+    insert into recode (id, user_id, am_content, 
+      pm_content, night_content, week_day, 
+      date_time
       )
-    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{valueM,jdbcType=VARCHAR}, 
-      #{valueA,jdbcType=VARCHAR}, #{valueN,jdbcType=VARCHAR}, #{theWek,jdbcType=VARCHAR}, 
-      #{theDay,jdbcType=VARCHAR}, #{recodeCreate,jdbcType=TIMESTAMP}, #{recodeModified,jdbcType=TIMESTAMP}
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{amContent,jdbcType=VARCHAR}, 
+      #{pmContent,jdbcType=VARCHAR}, #{nightContent,jdbcType=VARCHAR}, #{weekDay,jdbcType=VARCHAR}, 
+      #{dateTime,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.example.entity.Recode">
@@ -41,52 +42,52 @@
       <if test="id != null">
         id,
       </if>
-      <if test="uid != null">
-        uid,
+      <if test="userId != null">
+        user_id,
       </if>
-      <if test="valueM != null">
-        valueM,
+      <if test="amContent != null">
+        am_content,
       </if>
-      <if test="valueA != null">
-        valueA,
+      <if test="pmContent != null">
+        pm_content,
       </if>
-      <if test="valueN != null">
-        valueN,
+      <if test="nightContent != null">
+        night_content,
       </if>
-      <if test="theWek != null">
-        theWek,
+      <if test="weekDay != null">
+        week_day,
       </if>
-      <if test="theDay != null">
-        theDay,
+      <if test="dateTime != null">
+        date_time,
       </if>
       <if test="recodeCreate != null">
-        recodeCreate,
+        recode_create,
       </if>
       <if test="recodeModified != null">
-        recodeModified,
+        recode_modified,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="uid != null">
-        #{uid,jdbcType=INTEGER},
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
       </if>
-      <if test="valueM != null">
-        #{valueM,jdbcType=VARCHAR},
+      <if test="amContent != null">
+        #{amContent,jdbcType=VARCHAR},
       </if>
-      <if test="valueA != null">
-        #{valueA,jdbcType=VARCHAR},
+      <if test="pmContent != null">
+        #{pmContent,jdbcType=VARCHAR},
       </if>
-      <if test="valueN != null">
-        #{valueN,jdbcType=VARCHAR},
+      <if test="nightContent != null">
+        #{nightContent,jdbcType=VARCHAR},
       </if>
-      <if test="theWek != null">
-        #{theWek,jdbcType=VARCHAR},
+      <if test="weekDay != null">
+        #{weekDay,jdbcType=VARCHAR},
       </if>
-      <if test="theDay != null">
-        #{theDay,jdbcType=VARCHAR},
+      <if test="dateTime != null">
+        #{dateTime,jdbcType=VARCHAR},
       </if>
       <if test="recodeCreate != null">
         #{recodeCreate,jdbcType=TIMESTAMP},
@@ -99,98 +100,85 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.example.entity.Recode">
     update recode
     <set>
-      <if test="uid != null">
-        uid = #{uid,jdbcType=INTEGER},
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
       </if>
-      <if test="valueM != null">
-        valueM = #{valueM,jdbcType=VARCHAR},
+      <if test="amContent != null">
+        am_content = #{amContent,jdbcType=VARCHAR},
       </if>
-      <if test="valueA != null">
-        valueA = #{valueA,jdbcType=VARCHAR},
+      <if test="pmContent != null">
+        pm_content = #{pmContent,jdbcType=VARCHAR},
       </if>
-      <if test="valueN != null">
-        valueN = #{valueN,jdbcType=VARCHAR},
+      <if test="nightContent != null">
+        night_content = #{nightContent,jdbcType=VARCHAR},
       </if>
-      <if test="theWek != null">
-        theWek = #{theWek,jdbcType=VARCHAR},
+      <if test="weekDay != null">
+        week_day = #{weekDay,jdbcType=VARCHAR},
       </if>
-      <if test="theDay != null">
-        theDay = #{theDay,jdbcType=VARCHAR},
+      <if test="dateTime != null">
+        date_time = #{dateTime,jdbcType=VARCHAR},
       </if>
       <if test="recodeCreate != null">
-        recodeCreate = #{recodeCreate,jdbcType=TIMESTAMP},
+        recode_create = #{recodeCreate,jdbcType=TIMESTAMP},
       </if>
       <if test="recodeModified != null">
-        recodeModified = #{recodeModified,jdbcType=TIMESTAMP},
+        recode_modified = #{recodeModified,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.example.entity.Recode">
-    update recode
-    set uid = #{uid,jdbcType=INTEGER},
-      valueM = #{valueM,jdbcType=VARCHAR},
-      valueA = #{valueA,jdbcType=VARCHAR},
-      valueN = #{valueN,jdbcType=VARCHAR},
-      theWek = #{theWek,jdbcType=VARCHAR},
-      theDay = #{theDay,jdbcType=VARCHAR},
-      recodeCreate = #{recodeCreate,jdbcType=TIMESTAMP},
-      recodeModified = #{recodeModified,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <select id="selectNumByDay" parameterType="com.example.entity.Recode" resultType="int">
-    SELECT count(*) from recode where theday like '${theDay}' and uid = #{uid}
-  </select>
   <update id="updateRecodeByIdDay" parameterType="com.example.entity.Recode">
-    UPDATE recode set valueM = #{valueM},valueA = #{valueA},valueN = #{valueN} where uid = #{uid} and theday like '${theDay}'
+     UPDATE recode SET am_content = #{amContent},pm_content = #{pmContent},night_content = #{nightContent}
+     WHERE user_id = #{userId} AND date_time like '${dateTime}'
   </update>
-  <select id="selectUserRecodeByUid7days" resultMap="BaseResultMap">
-    SELECT * from recode where uid = #{uid} and date(theday) BETWEEN #{day} and DATE_ADD(#{day}, INTERVAL 6 DAY) order By theday
-  </select>
   <select id="selectUserByDate" resultType="int">
-    SELECT COUNT(*) FROM recode where theDay like '${theDay}' and uid = #{uid}
+     select count(*) FROM recode WHERE user_id = #{userId} and date_time like '${dateTime}'
   </select>
-
-  <select id="selectUserRecodeByName7days" resultType="com.example.entity.Recode">
-    SELECT valueM,valueA,valueN,theDay,theWek
-    FROM recode r JOIN `user` u ON u.id = r.uid
-    <where>
-      date(theday) BETWEEN #{theDay} AND DATE_ADD(#{theDay}, INTERVAL 6 DAY)
-      <if test="userName !=null and userName !=''">
-        and userName like '${userName}'
-      </if>
-    </where>
-    order by theDay
+  <select id="selectUserRecodeByUid7days" resultMap="BaseResultMap">
+     SELECT am_content,pm_content,night_content,week_day,date_time,recode_modified from recode
+     where user_id = #{userId} and date(date_time) BETWEEN #{dateTime} and DATE_ADD(#{dateTime}, INTERVAL 6 DAY)
+  </select>
+  <select id="selectUserRecodeByName7days" resultMap="BaseResultMap">
+     SELECT am_content,pm_content,night_content,week_day,date_time
+     FROM recode r JOIN `user`u on r.user_id = u.id join department d on u.department_id = d.id
+     <where>
+       user_name = #{userName} and date(date_time) BETWEEN #{dateTime} and DATE_ADD(#{dateTime}, INTERVAL 6 DAY)
+       <if test="departmentName != '' and departmentName != null">
+         and d.department_name like '${departmentName}'
+       </if>
+     </where>
   </select>
   <select id="selectUserRecodeByMonth" resultType="com.example.dto.DateByWeekDTO">
-    SELECT u.userName,valueM,valueA,valueN,theDay,theWek
-    FROM recode r JOIN `user` u ON u.id = r.uid
+     SELECT u.user_name userName,am_content amContent,pm_content pmContent,night_content nightContent,week_day weekDay,date_time dateTime
+     FROM recode r JOIN `user`u on r.user_id = u.id
     <where>
-      r.theDay LIKE '${theDay}%'
-      <if test="userName !=null and userName !=''">
-        and userName like '${userName}'
+      r.date_time like '${dateTime}%'
+      <if test="userName != '' and userName != null">
+        and u.user_name like '${userName}'
       </if>
     </where>
-    order BY u.id
+    order by u.id, date_time
   </select>
   <select id="selectUserRecodeByQuarter" resultType="com.example.dto.DateByWeekDTO">
-    SELECT u.userName,valueM,valueA,valueN,theDay,theWek
-    FROM recode r join `user` u on r.uid = u.id
+     SELECT u.user_name userName,am_content amContent,pm_content pmContent,night_content nightContent,week_day weekDay,date_time dateTime
+     FROM recode r JOIN `user`u on r.user_id = u.id
     <where>
-      QUARTER (theDay) = #{quarter} and YEAR(theDay) = #{year}
-      <if test="userName !=null and userName !=''">
-        and userName like '${userName}'
+      YEAR(date_time) = #{year} and quarter(date_time) = #{quarter}
+      <if test="userName != '' and userName != null">
+        and u.user_name like '${userName}'
       </if>
     </where>
+    order by u.id, date_time
   </select>
-  <select id="selectUserRecodeByYear">
-    SELECT u.userName,valueM,valueA,valueN,theDay,theWek
-    FROM recode r join `user` u on r.uid = u.id
+  <select id="selectUserRecodeByYear" resultType="com.example.dto.DateByWeekDTO">
+    SELECT u.user_name userName,am_content amContent,pm_content pmContent,night_content nightContent,week_day weekDay,date_time dateTime
+    FROM recode r JOIN `user`u on r.user_id = u.id
     <where>
-      YEAR(theDay) = #{year}
-      <if test="userName !=null and userName !=''">
-        and userName like '${userName}'
+      YEAR(date_time) = #{year}
+      <if test="userName != '' and userName != null">
+        and u.user_name like '${userName}'
       </if>
     </where>
+    order by u.id, date_time
   </select>
 </mapper>

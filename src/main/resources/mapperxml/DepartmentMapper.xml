@@ -3,11 +3,11 @@
 <mapper namespace="com.example.mapper.DepartmentMapper">
   <resultMap id="BaseResultMap" type="com.example.entity.Department">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="did" jdbcType="INTEGER" property="did" />
-    <result column="dname" jdbcType="VARCHAR" property="dname" />
+    <result column="department_code" jdbcType="INTEGER" property="departmentCode" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, did, dname
+    id, department_code, department_name
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -20,9 +20,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.example.entity.Department">
-    insert into department (id, did, dname
+    insert into department (id, department_code, department_name
       )
-    values (#{id,jdbcType=INTEGER}, #{did,jdbcType=INTEGER}, #{dname,jdbcType=VARCHAR}
+    values (#{id,jdbcType=INTEGER}, #{departmentCode,jdbcType=INTEGER}, #{departmentName,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.example.entity.Department">
@@ -31,41 +31,41 @@
       <if test="id != null">
         id,
       </if>
-      <if test="did != null">
-        did,
+      <if test="departmentCode != null">
+        department_code,
       </if>
-      <if test="dname != null">
-        dname,
+      <if test="departmentName != null">
+        department_name,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="did != null">
-        #{did,jdbcType=INTEGER},
+      <if test="departmentCode != null">
+        #{departmentCode,jdbcType=INTEGER},
       </if>
-      <if test="dname != null">
-        #{dname,jdbcType=VARCHAR},
+      <if test="departmentName != null">
+        #{departmentName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.example.entity.Department">
     update department
     <set>
-      <if test="did != null">
-        did = #{did,jdbcType=INTEGER},
+      <if test="departmentCode != null">
+        department_code = #{departmentCode,jdbcType=INTEGER},
       </if>
-      <if test="dname != null">
-        dname = #{dname,jdbcType=VARCHAR},
+      <if test="departmentName != null">
+        department_name = #{departmentName,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.example.entity.Department">
     update department
-    set did = #{did,jdbcType=INTEGER},
-      dname = #{dname,jdbcType=VARCHAR}
+    set department_code = #{departmentCode,jdbcType=INTEGER},
+      department_name = #{departmentName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

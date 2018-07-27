@@ -3,13 +3,14 @@
 <mapper namespace="com.example.mapper.UserMapper">
   <resultMap id="BaseResultMap" type="com.example.entity.User">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="uid" jdbcType="INTEGER" property="uid" />
-    <result column="userName" jdbcType="VARCHAR" property="userName" />
-    <result column="department" jdbcType="INTEGER" property="department" />
-    <result column="passWord" jdbcType="VARCHAR" property="passWord" />
+    <result column="user_code" jdbcType="INTEGER" property="userCode" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="department_id" jdbcType="INTEGER" property="departmentId" />
+    <result column="pass_word" jdbcType="VARCHAR" property="passWord" />
+    <result column="user_level" jdbcType="VARCHAR" property="userLevel" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, uid, userName, department, passWord
+    id, user_code, user_name, department_id, pass_word, user_level
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -22,10 +23,12 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.example.entity.User">
-    insert into user (id, uid, userName, 
-      department, passWord)
-    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
-      #{department,jdbcType=INTEGER}, #{passWord,jdbcType=VARCHAR})
+    insert into user (id, user_code, user_name, 
+      department_id, pass_word, user_level
+      )
+    values (#{id,jdbcType=INTEGER}, #{userCode,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+      #{departmentId,jdbcType=INTEGER}, #{passWord,jdbcType=VARCHAR}, #{userLevel,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.example.entity.User">
     insert into user
@@ -33,76 +36,95 @@
       <if test="id != null">
         id,
       </if>
-      <if test="uid != null">
-        uid,
+      <if test="userCode != null">
+        user_code,
       </if>
       <if test="userName != null">
-        userName,
+        user_name,
       </if>
-      <if test="department != null">
-        department,
+      <if test="departmentId != null">
+        department_id,
       </if>
       <if test="passWord != null">
-        passWord,
+        pass_word,
+      </if>
+      <if test="userLevel != null">
+        user_level,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="uid != null">
-        #{uid,jdbcType=INTEGER},
+      <if test="userCode != null">
+        #{userCode,jdbcType=INTEGER},
       </if>
       <if test="userName != null">
         #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="department != null">
-        #{department,jdbcType=INTEGER},
+      <if test="departmentId != null">
+        #{departmentId,jdbcType=INTEGER},
       </if>
       <if test="passWord != null">
         #{passWord,jdbcType=VARCHAR},
+      </if>
+      <if test="userLevel != null">
+        #{userLevel,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.example.entity.User">
     update user
     <set>
-      <if test="uid != null">
-        uid = #{uid,jdbcType=INTEGER},
+      <if test="userCode != null">
+        user_code = #{userCode,jdbcType=INTEGER},
       </if>
       <if test="userName != null">
-        userName = #{userName,jdbcType=VARCHAR},
+        user_name = #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="department != null">
-        department = #{department,jdbcType=INTEGER},
+      <if test="departmentId != null">
+        department_id = #{departmentId,jdbcType=INTEGER},
       </if>
       <if test="passWord != null">
-        passWord = #{passWord,jdbcType=VARCHAR},
+        pass_word = #{passWord,jdbcType=VARCHAR},
+      </if>
+      <if test="userLevel != null">
+        user_level = #{userLevel,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.example.entity.User">
     update user
-    set uid = #{uid,jdbcType=INTEGER},
-      userName = #{userName,jdbcType=VARCHAR},
-      department = #{department,jdbcType=INTEGER},
-      passWord = #{passWord,jdbcType=VARCHAR}
+    set user_code = #{userCode,jdbcType=INTEGER},
+      user_name = #{userName,jdbcType=VARCHAR},
+      department_id = #{departmentId,jdbcType=INTEGER},
+      pass_word = #{passWord,jdbcType=VARCHAR},
+      user_level = #{userLevel,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectNumByLogin" parameterType="com.example.dto.LoginMessageDTO" resultType="int">
-    SELECT count(*) FROM `user` u join department d on u.department = d.id and `username` like '${userName}' and d.dName like '${department}'
+    SELECT count(*) FROM `user` u JOIN department d ON u.department_id = d.id
+    where  u.user_name LIKE '${userName}' AND d.department_name LIKE '${departmentName}'
   </select>
   <select id="selectPasswordByName" resultType="String">
-    select `password` FROM `user` WHERE `username` like '${name}'
+    select pass_word FROM `user` WHERE user_name like '${name}'
   </select>
   <select id="selectUserByName" resultMap="BaseResultMap">
-    select * FROM `user` WHERE `username` like '${name}'
+    select * FROM `user` WHERE user_name like '${name}'
   </select>
   <select id="selectAllNameByDepament" resultType="String">
-    SELECT userName from `user` where department = #{department}
+    SELECT user_name from `user` u join department d on u.department_id = d.id
+    <where>
+      <if test="departmentName != '' and departmentName != null">
+        and d.department_name like '${departmentName}'
+      </if>
+      <if test="department != '' and department != null">
+        and department_id = #{department}
+      </if>
+    </where>
   </select>
   <select id="selectAllName" resultType="String">
-    SELECT userName from `user`
+    SELECT user_name from `user`
   </select>
 </mapper>
