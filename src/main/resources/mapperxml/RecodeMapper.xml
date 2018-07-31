@@ -9,11 +9,13 @@
     <result column="night_content" jdbcType="VARCHAR" property="nightContent" />
     <result column="week_day" jdbcType="VARCHAR" property="weekDay" />
     <result column="date_time" jdbcType="VARCHAR" property="dateTime" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="week_id" jdbcType="VARCHAR" property="weekId" />
     <result column="recode_create" jdbcType="TIMESTAMP" property="recodeCreate" />
     <result column="recode_modified" jdbcType="TIMESTAMP" property="recodeModified" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, am_content, pm_content, night_content, week_day, date_time, recode_create, 
+    id, user_id, am_content, pm_content, night_content, week_day, date_time, state, week_id, recode_create,
     recode_modified
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -29,11 +31,11 @@
   <insert id="insert" parameterType="com.example.entity.Recode">
     insert into recode (id, user_id, am_content, 
       pm_content, night_content, week_day, 
-      date_time
+      date_time, state, week_id
       )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{amContent,jdbcType=VARCHAR}, 
       #{pmContent,jdbcType=VARCHAR}, #{nightContent,jdbcType=VARCHAR}, #{weekDay,jdbcType=VARCHAR}, 
-      #{dateTime,jdbcType=VARCHAR}
+      #{dateTime,jdbcType=VARCHAR},#{state},#{weekId}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.example.entity.Recode">
@@ -128,7 +130,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateRecodeByIdDay" parameterType="com.example.entity.Recode">
-     UPDATE recode SET am_content = #{amContent},pm_content = #{pmContent},night_content = #{nightContent}
+     UPDATE recode SET am_content = #{amContent},pm_content = #{pmContent},night_content = #{nightContent}, state = '1'
      WHERE user_id = #{userId} AND date_time like '${dateTime}'
   </update>
   <select id="selectUserByDate" resultType="int">
@@ -139,7 +141,7 @@
      where user_id = #{userId} and date(date_time) BETWEEN #{dateTime} and DATE_ADD(#{dateTime}, INTERVAL 6 DAY)
   </select>
   <select id="selectUserRecodeByName7days" resultMap="BaseResultMap">
-     SELECT am_content,pm_content,night_content,week_day,date_time
+     SELECT am_content,pm_content,night_content,week_day,date_time,week_id
      FROM recode r JOIN `user`u on r.user_id = u.id join department d on u.department_id = d.id
      <where>
        user_name = #{userName} and date(date_time) BETWEEN #{dateTime} and DATE_ADD(#{dateTime}, INTERVAL 6 DAY)
@@ -148,7 +150,7 @@
        </if>
      </where>
   </select>
-  <select id="selectUserRecodeByMonth" resultType="com.example.dto.DateByWeekDTO">
+  <select id="selectUserRecodeByMonth" resultType="com.example.dto.recode.DateByWeekDTO">
      SELECT u.user_name userName,am_content amContent,pm_content pmContent,night_content nightContent,week_day weekDay,date_time dateTime
      FROM recode r JOIN `user`u on r.user_id = u.id
     <where>
@@ -159,7 +161,7 @@
     </where>
     order by u.id, date_time
   </select>
-  <select id="selectUserRecodeByQuarter" resultType="com.example.dto.DateByWeekDTO">
+  <select id="selectUserRecodeByQuarter" resultType="com.example.dto.recode.DateByWeekDTO">
      SELECT u.user_name userName,am_content amContent,pm_content pmContent,night_content nightContent,week_day weekDay,date_time dateTime
      FROM recode r JOIN `user`u on r.user_id = u.id
     <where>
@@ -170,7 +172,7 @@
     </where>
     order by u.id, date_time
   </select>
-  <select id="selectUserRecodeByYear" resultType="com.example.dto.DateByWeekDTO">
+  <select id="selectUserRecodeByYear" resultType="com.example.dto.recode.DateByWeekDTO">
     SELECT u.user_name userName,am_content amContent,pm_content pmContent,night_content nightContent,week_day weekDay,date_time dateTime
     FROM recode r JOIN `user`u on r.user_id = u.id
     <where>

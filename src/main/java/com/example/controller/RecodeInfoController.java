@@ -2,12 +2,13 @@ package com.example.controller;
 
 import com.example.common.util.CommonResult;
 import com.example.common.util.DateUtil;
-import com.example.dto.RecodeConditionDTO;
-import com.example.dto.RecodeCondtion2DTO;
-import com.example.dto.UserDayRecodeDTO;
+import com.example.dto.recode.UserDayRecodeDTO;
+import com.example.dto.recode.RecodeConditionDTO;
+import com.example.dto.recode.RecodeCondtion2DTO;
 import com.example.entity.User;
 import com.example.enums.ResultCode;
 import com.example.service.IRecodeService;
+import com.mangofactory.swagger.annotations.ApiIgnore;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -58,8 +59,9 @@ public class RecodeInfoController {
      * @param request
      * @return
      */
+    @ApiIgnore()
     @GetMapping("/getUserRecode")
-    @ApiOperation(value = "查询本人本周的数据", httpMethod = "GET")
+    @ApiOperation(value = "查询当前用户本周的日清和审核", httpMethod = "GET")
 //    @ApiImplicitParam(name = "userId", value = "用户id", dataType = "int",paramType = "path",required = true)
     public CommonResult selectUserDay(HttpServletRequest request) {
         CommonResult commonResult = new CommonResult();
@@ -70,6 +72,9 @@ public class RecodeInfoController {
         userDayRecodeDTO.setWeeks(recodeService.getUserRecode(user.getId()));
         userDayRecodeDTO.setUserName(user.getUserName());
         commonResult.setResponseData(userDayRecodeDTO);
+//        UserWeekRecodeReviewDTO userWeekRecodeReviewDTO = new UserWeekRecodeReviewDTO();
+//        userWeekRecodeReviewDTO.setWeeks(recodeService.getUserRecode(user.getId()));
+//        userWeekRecodeReviewDTO.setReviews(recodeService.);
         return commonResult;
     }
 
@@ -85,7 +90,7 @@ public class RecodeInfoController {
     }
 
     @PostMapping("/getUserByCondition2")
-    @ApiOperation(value = "按周条件查询所有人本周的数据日清", httpMethod = "POST")
+    @ApiOperation(value = "按周条件查询所有人的数据日清", httpMethod = "POST")
     @ApiImplicitParam(name = "recodeCondtion2DTO", value = "该参数用来封装查询条件数据数据", paramType = "body", dataType = "RecodeCondtion2DTO", required = true)
     public CommonResult getUserByCondition2(@RequestBody RecodeCondtion2DTO recodeCondtion2DTO, HttpServletRequest request) throws Exception {
         CommonResult commonResult = new CommonResult();

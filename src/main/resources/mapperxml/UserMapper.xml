@@ -103,7 +103,7 @@
       user_level = #{userLevel,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectNumByLogin" parameterType="com.example.dto.LoginMessageDTO" resultType="int">
+  <select id="selectNumByLogin" parameterType="com.example.dto.userinfo.LoginMessageDTO" resultType="int">
     SELECT count(*) FROM `user` u JOIN department d ON u.department_id = d.id
     where  u.user_name LIKE '${userName}' AND d.department_name LIKE '${departmentName}'
   </select>
@@ -126,5 +126,11 @@
   </select>
   <select id="selectAllName" resultType="String">
     SELECT user_name from `user`
+  </select>
+  <select id="selectNameById" resultType="String">
+    SELECT user_name FROM `user` WHERE id = #{id}
+  </select>
+  <select id="selectLevelByName" resultType="String">
+    SELECT user_level FROM `user` WHERE user_name like #{userName}
   </select>
 </mapper>

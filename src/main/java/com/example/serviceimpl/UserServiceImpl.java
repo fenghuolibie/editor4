@@ -1,6 +1,6 @@
 package com.example.serviceimpl;
 
-import com.example.dto.LoginMessageDTO;
+import com.example.dto.userinfo.LoginMessageDTO;
 import com.example.entity.User;
 import com.example.enums.LoginEnum;
 import com.example.mapper.DepartmentMapper;
@@ -22,12 +22,6 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private DepartmentMapper departmentMapper;
 
-    @Override
-    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class, readOnly = true)
-    public User getUser(int id) {
-        return userMapper.selectByPrimaryKey(id);
-    }
-
     /**
      * 校验登录用户信息并登录
      *
@@ -47,7 +41,7 @@ public class UserServiceImpl implements IUserService {
         }
         User user = userMapper.selectUserByName(name);
         Request.getSession().setAttribute("userbean", user);
-        return LoginEnum.SUCCESS.getMessage();
+        return user.getUserLevel();
     }
 
     @Override

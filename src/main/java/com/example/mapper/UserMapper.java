@@ -1,6 +1,6 @@
 package com.example.mapper;
 
-import com.example.dto.LoginMessageDTO;
+import com.example.dto.userinfo.LoginMessageDTO;
 import com.example.entity.User;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,7 +25,19 @@ public interface UserMapper {
 
     User selectUserByName(@Param("name") String name);
 
+    /**
+     *
+     * @param department
+     * @param departmentName
+     * @return
+     */
     List<String> selectAllNameByDepament(@Param("department") Integer department,@Param("departmentName") String departmentName);
 
     List<String> selectAllName();
+
+    String selectNameById(@Param("id") int id);
+
+    String selectLevelByName(@Param("userName") String userName);
+
+
 }

@@ -1,13 +1,11 @@
 package com.example.service;
 
-import com.example.dto.LoginMessageDTO;
-import com.example.entity.User;
+import com.example.dto.userinfo.LoginMessageDTO;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface IUserService {
-    User getUser(int id);
 
     String checkUser(LoginMessageDTO loginMessageDTO, HttpServletRequest httpServletRequest);
 

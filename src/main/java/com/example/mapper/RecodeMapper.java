@@ -1,6 +1,6 @@
 package com.example.mapper;
 
-import com.example.dto.DateByWeekDTO;
+import com.example.dto.recode.DateByWeekDTO;
 import com.example.entity.Recode;
 import org.apache.ibatis.annotations.Param;
 
@@ -69,5 +69,11 @@ public interface RecodeMapper {
      */
     List<DateByWeekDTO> selectUserRecodeByQuarter(@Param("userName") String userName, @Param("quarter") int quarter, @Param("year") String year);
 
+    /**
+     * 查询指定年份，和指定姓名的人的日清
+     *
+     * @param userName
+     * @return
+     */
     List<DateByWeekDTO> selectUserRecodeByYear(@Param("userName") String userName, @Param("year") String year);
 }

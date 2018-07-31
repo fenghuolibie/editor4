@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.dto.userinfo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.Data;
 
 public class LoginMessageDTO {
 
-    @ApiModelProperty(value = "用户名",example = "张三")
+    @ApiModelProperty(value = "用户名",example = "赵二")
     private String userName;
 
     @ApiModelProperty(value = "用户密码",example = "123456")
@@ -18,4 +18,5 @@ public class LoginMessageDTO {
 
     @ApiModelProperty(value = "用户所属部门",example = "信息所")
     private String departmentName;
+
 }

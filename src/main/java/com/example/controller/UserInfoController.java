@@ -1,8 +1,10 @@
 package com.example.controller;
 
 import com.example.common.util.CommonResult;
-import com.example.dto.LoginMessageDTO;
+import com.example.dto.userinfo.LoginMessageDTO;
+import com.example.dto.userinfo.LoginResponseDTO;
 import com.example.entity.User;
+import com.example.enums.LoginEnum;
 import com.example.enums.ResultCode;
 import com.example.service.IUserService;
 import io.swagger.annotations.Api;
@@ -20,13 +22,7 @@ public class UserInfoController {
     @Autowired
     private IUserService userService;
 
-    @ApiOperation(value = "测试接口", httpMethod = "GET")
-    @GetMapping(value = "/v1/user")
-    public User getUserInfo(@RequestParam Integer userId) {
-        return null;
-    }
-
-    @ApiOperation(value = "登录验证", httpMethod = "POST")
+    @ApiOperation(value = "登录", httpMethod = "POST")
     @ApiImplicitParam(name = "loginMessageDTO", value = "该参数用来封装用户登录填入的数据", paramType = "body", dataType = "LoginMessageDTO", required = true)
     @PostMapping("/loginCheck")
     public CommonResult loginCheck(@RequestBody LoginMessageDTO loginMessageDTO, HttpServletRequest request) {
@@ -37,11 +33,14 @@ public class UserInfoController {
             return commonResult;
         }
         commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
-        commonResult.setResponseMessage(userService.checkUser(loginMessageDTO, request));
+        commonResult.setResponseMessage(LoginEnum.SUCCESS.getMessage());
+        LoginResponseDTO loginResponseDTO = new LoginResponseDTO();
+        loginResponseDTO.setUserLevel(userService.checkUser(loginMessageDTO, request));
+        commonResult.setResponseData(loginResponseDTO);
         return commonResult;
     }
 
-    @ApiOperation(value = "查询当前登陆部门所有人的名字", httpMethod = "GET")
+    @ApiOperation(value = "查询当前用户部门所有人的名字", httpMethod = "GET")
     @GetMapping("v1/getDepamentAllName")
     public CommonResult getDepamentAllName(HttpServletRequest request){
         CommonResult commonResult = new CommonResult();
@@ -52,7 +51,7 @@ public class UserInfoController {
         return commonResult;
     }
 
-    @ApiOperation(value = "查询所有人的名字", httpMethod = "GET")
+    @ApiOperation(value = "查询所有部门人的名字", httpMethod = "GET")
     @GetMapping("v1/getAllName")
     public CommonResult getAllName(HttpServletRequest request){
         CommonResult commonResult = new CommonResult();

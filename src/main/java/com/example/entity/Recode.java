@@ -22,15 +22,21 @@ public class Recode {
     @ApiModelProperty(value = "晚上午内容", example = "晚上内容")
     private String nightContent;
 
-    @ApiModelProperty(value = "星期",example = " 星期二")
+    @ApiModelProperty(value = "星期", example = " 星期二")
     private String weekDay;
 
-    @ApiModelProperty(value = "日期",example = "20180725")
+    @ApiModelProperty(value = "日期", example = "20180725")
     private String dateTime;
+
+    @JsonIgnore
+    private Integer state;
+
+    @JsonIgnore
+    private String weekId;
 
     @JsonIgnore
     private Date recodeCreate;
 
-    private Date recodeModified;
+    private String recodeModified;
 
 }
