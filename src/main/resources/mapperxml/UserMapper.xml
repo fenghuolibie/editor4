@@ -123,14 +123,24 @@
         and department_id = #{department}
       </if>
     </where>
+    ORDER BY user_level DESC
   </select>
   <select id="selectAllName" resultType="String">
-    SELECT user_name from `user`
+    SELECT user_name from `user` ORDER BY user_level DESC
   </select>
   <select id="selectNameById" resultType="String">
     SELECT user_name FROM `user` WHERE id = #{id}
   </select>
   <select id="selectLevelByName" resultType="String">
     SELECT user_level FROM `user` WHERE user_name like #{userName}
+  </select>
+  <select id="selectNameByLevel" resultType="string">
+    SELECT user_name FROM `user` WHERE user_level BETWEEN #{lowLevel} and #{highLevel}
+  </select>
+  <select id="selectIdByName" resultType="String">
+    SELECT id FROM `user` WHERE user_name like '${userName}'
+  </select>
+  <select id="selectLevelById" resultType="Integer">
+    SELECT user_level FROM `user` WHERE id = #{id}
   </select>
 </mapper>

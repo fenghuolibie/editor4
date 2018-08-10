@@ -114,9 +114,24 @@
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <select id="getReviewByWeekId" resultMap="BaseResultMap">
-    SELECT rw.user_id,rw.content,rw.gmt_modified
-    FROM recode re JOIN review rw ON re.week_id = rw.week_id
-    WHERE re.week_id LIKE '${weekId}' GROUP BY rw.user_id
+    SELECT rw.user_id, rw.content, rw.gmt_modified
+    FROM review rw
+    WHERE rw.week_id LIKE '${weekId}'
   </select>
+  <select id="selectReviewByUserWeekId" resultMap="BaseResultMap">
+    SELECT content, gmt_modified FROM review WHERE week_id like '${weekId}' and user_id = '${userId}'
+  </select>
+  <select id="selectReviewByWeekId" resultType="com.example.dto.review.ReviewedUserDTO">
+    SELECT u.user_name userName,content,gmt_modified gmtModified
+    FROM review r JOIN `user` u on r.user_id = u.id
+    WHERE week_id LIKE '${weekId}'
+  </select>
+  <select id="selectNumByUserWeekId" resultType="Integer">
+    SELECT count(*) FROM review WHERE week_id like '${weekId}' and user_id = '${userId}'
+  </select>
+  <update id="updateContentByUserWeekId">
+    UPDATE review SET content = #{content} WHERE week_id like '${weekId}' AND user_id  = #{userId}
+  </update>
 </mapper>

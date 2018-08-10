@@ -1,5 +1,6 @@
 package com.example.dto.recode;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@ApiModel(value = "按周条件查询所有人的数据日清和审核的json数据")
 public class UserWeekRecodeReviewDTO {
     @ApiModelProperty(value = "当前登录用户姓名", example = "张三")
     private String userName;

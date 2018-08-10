@@ -5,11 +5,13 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * 用于存放和接收用户单天所更新获需要的数据
+ * 历史条件查询所有人的数据日清
  */
 @Data
 @Accessors(chain = true)
-public class DateByWeekDTO {
+public class DateByWeek1DTO {
+    @ApiModelProperty(value = "姓名",example = "张三")
+    private String userName;
 
     @ApiModelProperty(value = "日期",example = "20180725")
     private String dateTime;
@@ -28,6 +30,4 @@ public class DateByWeekDTO {
 
     @ApiModelProperty(value = "更新时间",example = "2018-08-01 11：11：11.1",hidden = true)
     private String recodeModified;
-
-    private String write;
 }

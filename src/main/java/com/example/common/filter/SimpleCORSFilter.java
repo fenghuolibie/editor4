@@ -37,7 +37,7 @@ public class SimpleCORSFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) res;
 
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        response.setHeader("Access-Control-Allow-Origin", "http://192.168.80.148:8080");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "3600");

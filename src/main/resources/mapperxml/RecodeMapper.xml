@@ -133,7 +133,7 @@
      UPDATE recode SET am_content = #{amContent},pm_content = #{pmContent},night_content = #{nightContent}, state = '1'
      WHERE user_id = #{userId} AND date_time like '${dateTime}'
   </update>
-  <select id="selectUserByDate" resultType="int">
+  <select id="selectUserByDate" resultType="Integer">
      select count(*) FROM recode WHERE user_id = #{userId} and date_time like '${dateTime}'
   </select>
   <select id="selectUserRecodeByUid7days" resultMap="BaseResultMap">
@@ -150,7 +150,7 @@
        </if>
      </where>
   </select>
-  <select id="selectUserRecodeByMonth" resultType="com.example.dto.recode.DateByWeekDTO">
+  <select id="selectUserRecodeByMonth" resultType="com.example.dto.recode.DateByWeek1DTO">
      SELECT u.user_name userName,am_content amContent,pm_content pmContent,night_content nightContent,week_day weekDay,date_time dateTime
      FROM recode r JOIN `user`u on r.user_id = u.id
     <where>
@@ -159,9 +159,9 @@
         and u.user_name like '${userName}'
       </if>
     </where>
-    order by u.id, date_time
+    order by u.user_level DESC, date_time
   </select>
-  <select id="selectUserRecodeByQuarter" resultType="com.example.dto.recode.DateByWeekDTO">
+  <select id="selectUserRecodeByQuarter" resultType="com.example.dto.recode.DateByWeek1DTO">
      SELECT u.user_name userName,am_content amContent,pm_content pmContent,night_content nightContent,week_day weekDay,date_time dateTime
      FROM recode r JOIN `user`u on r.user_id = u.id
     <where>
@@ -170,9 +170,9 @@
         and u.user_name like '${userName}'
       </if>
     </where>
-    order by u.id, date_time
+    order by u.user_level DESC, date_time
   </select>
-  <select id="selectUserRecodeByYear" resultType="com.example.dto.recode.DateByWeekDTO">
+  <select id="selectUserRecodeByYear" resultType="com.example.dto.recode.DateByWeek1DTO">
     SELECT u.user_name userName,am_content amContent,pm_content pmContent,night_content nightContent,week_day weekDay,date_time dateTime
     FROM recode r JOIN `user`u on r.user_id = u.id
     <where>
@@ -181,6 +181,14 @@
         and u.user_name like '${userName}'
       </if>
     </where>
-    order by u.id, date_time
+    order by u.user_level DESC, date_time
+  </select>
+  <select id="selectUserRecodeByLevel" resultType="com.example.dto.recode.DateByWeek1DTO">
+
+  </select>
+  <select id="selectUserRecodeByweekId" resultType="com.example.dto.recode.DateByWeekDTO">
+    SELECT am_content amContent,pm_content pmContent,night_content nightContent,week_day weekDay,date_time dateTime,recode_modified recodeModified
+    FROM recode r
+    WHERE week_id like '${weekId}'
   </select>
 </mapper>

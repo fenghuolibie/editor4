@@ -1,5 +1,6 @@
 package com.example.mapper;
 
+import com.example.dto.recode.DateByWeek1DTO;
 import com.example.dto.recode.DateByWeekDTO;
 import com.example.entity.Recode;
 import org.apache.ibatis.annotations.Param;
@@ -58,7 +59,7 @@ public interface RecodeMapper {
      * @param dateTime
      * @return
      */
-    List<DateByWeekDTO> selectUserRecodeByMonth(@Param("userName") String userName, @Param("dateTime") String dateTime);
+    List<DateByWeek1DTO> selectUserRecodeByMonth(@Param("userName") String userName, @Param("dateTime") String dateTime);
 
     /**
      * 查询指定季度，和指定名称的人的日清
@@ -67,7 +68,7 @@ public interface RecodeMapper {
      * @param quarter
      * @return
      */
-    List<DateByWeekDTO> selectUserRecodeByQuarter(@Param("userName") String userName, @Param("quarter") int quarter, @Param("year") String year);
+    List<DateByWeek1DTO> selectUserRecodeByQuarter(@Param("userName") String userName, @Param("quarter") int quarter, @Param("year") String year);
 
     /**
      * 查询指定年份，和指定姓名的人的日清
@@ -75,5 +76,9 @@ public interface RecodeMapper {
      * @param userName
      * @return
      */
-    List<DateByWeekDTO> selectUserRecodeByYear(@Param("userName") String userName, @Param("year") String year);
+    List<DateByWeek1DTO> selectUserRecodeByYear(@Param("userName") String userName, @Param("year") String year);
+
+    List<DateByWeekDTO> selectUserRecodeByLevel(@Param("lowLevel") int lowLevel,@Param("lowLevel") int highLevel);
+
+    List<DateByWeekDTO> selectUserRecodeByweekId(@Param("weekId") String weekId);
 }

@@ -14,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Api(value = "UserInfoController",tags = "用户的注册和登录")
 @RestController
 @RequestMapping("/api")
 public class UserInfoController {
+
     @Autowired
     private IUserService userService;
 
@@ -60,5 +62,16 @@ public class UserInfoController {
         commonResult.setResponseMessage("查询成功");
         commonResult.setResponseData(userService.getAllname());
         return commonResult;
+    }
+
+    @ApiOperation(value = "退出登录", httpMethod = "GET")
+    @GetMapping("v1/exit")
+    public CommonResult exit(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session==null){
+            return new CommonResult(ResultCode.ERROR.getCode(),"当前不存在会话",null);
+        }
+        session.removeAttribute("userbean");
+        return new CommonResult(ResultCode.SUCCESS.getCode(),"退出成功",null);
     }
 }

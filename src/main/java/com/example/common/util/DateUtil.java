@@ -23,6 +23,16 @@ public class DateUtil {
     }
 
     /**
+     * 根据yyMMdd格式的字符串获得Date类型的数据
+     * @param date
+     * @return
+     * @throws ParseException
+     */
+    public static Date getStringDate(String date) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+        return simpleDateFormat.parse(date);
+    }
+    /**
      * 获得当前日期的yyyy-MM-dd HH:mm:ss格式的字符串数据
      *
      * @return
@@ -61,7 +71,8 @@ public class DateUtil {
             dayWeek = 8;
         }
         //当前日期所在星期的第一天
-        return new Integer(Integer.parseInt(DateUtil.getCurrentDate(date)) + 2 - dayWeek).toString();
+        calendar.add(Calendar.DATE, 2-dayWeek);
+        return getCurrentDate(calendar.getTime());
     }
 
     /**
@@ -77,6 +88,8 @@ public class DateUtil {
             format.parse(str);
         } catch (ParseException e) {
             // 如果throw java.text.ParseException或者NullPointerException，就说明格式不对
+            convertSuccess = false;
+        }catch (NullPointerException e){
             convertSuccess = false;
         }
         return convertSuccess;

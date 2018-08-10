@@ -50,7 +50,6 @@ public class RecodeServiceImpl implements IRecodeService {
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public int updateUserRecode(UserDayRecodeDTO userDayRecodeDTO, User user) throws ParseException {
         int id = user.getId();
-        Date currentDate = new Date();
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         List<DateByWeekDTO> dateByWeekDTOlist = userDayRecodeDTO.getWeeks();
         Recode recode = new Recode();
@@ -61,9 +60,6 @@ public class RecodeServiceImpl implements IRecodeService {
                 return 0;
             }
             //是否传输日期越界（今天）
-            if (Integer.parseInt(DateUtil.getFirstDayBy(currentDate) + 6) < Integer.parseInt(dateTime)) {
-                return 0;
-            }
             BeanUtils.copyProperties(dateByWeekDTOlist.get(i), recode);
             recode.setUserId(id);
             recodeMapper.updateRecodeByIdDay(recode);
@@ -72,20 +68,20 @@ public class RecodeServiceImpl implements IRecodeService {
     }
 
     /**
-     * 查询本周的日清数据，如果数据库不存在数据，则生成数据库语句插入
+     * 查询当前用户指定日期所在周的日清数据，如果数据库不存在数据，则生成数据库语句插入
      *
      * @param userid
      * @return
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public List<DateByWeekDTO> getUserRecode(int userid) {
-        Date currentDate = new Date();
-        String date = DateUtil.getFirstDayBy(currentDate);
+    public List<DateByWeekDTO> getUserRecode(int userid, String dateTime) throws ParseException {
+        String date = DateUtil.getFirstDayBy(DateUtil.getStringDate(dateTime));
         if (recodeMapper.selectUserByDate(userid, date) == 0) {
-            //如果不存在当前所在周的表
+            //如果不存在指定日期所在周的表
             Recode recode = new Recode();
             recode.setUserId(userid);
             Calendar calendar = Calendar.getInstance();
+            calendar.setTime(DateUtil.getStringDate(date));
             for (int i = 0; i < 7; i++) {
                 recode.setWeekDay(WeekEnum.getByValue(i + 2).getMessage());
                 recode.setDateTime(DateUtil.getCurrentDate(calendar.getTime()));
@@ -97,9 +93,9 @@ public class RecodeServiceImpl implements IRecodeService {
         }
         List<Recode> recodeList = recodeMapper.selectUserRecodeByUid7days(userid, date);
         List<DateByWeekDTO> dateByWeekDTOList = new ArrayList<>();
-        for (int i = 0;i<recodeList.size();i++) {
+        for (int i = 0; i < recodeList.size(); i++) {
             dateByWeekDTOList.add(new DateByWeekDTO());
-            BeanUtils.copyProperties(recodeList.get(i),dateByWeekDTOList.get(i));
+            BeanUtils.copyProperties(recodeList.get(i), dateByWeekDTOList.get(i));
         }
         return dateByWeekDTOList;
     }
@@ -111,7 +107,7 @@ public class RecodeServiceImpl implements IRecodeService {
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class, readOnly = true)
-    public List<DateByWeekDTO> getRecodeCondition(RecodeConditionDTO recodeConditionDTO) {
+    public List<DateByWeek1DTO> getRecodeCondition(RecodeConditionDTO recodeConditionDTO) {
         String dateWay = recodeConditionDTO.getDateWay();
         String userName = recodeConditionDTO.getUserName();
         String message = recodeConditionDTO.getMessage();
@@ -158,7 +154,7 @@ public class RecodeServiceImpl implements IRecodeService {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class, readOnly = true)
     public List<UserWeekRecodeReviewDTO> getRecodeCondition2(RecodeCondtion2DTO recodeCondtion2DTO, HttpServletRequest request) throws Exception {
-        String departmentName;
+        String departmentName = null;
         User user = (User) request.getSession().getAttribute("userbean");
         if (recodeCondtion2DTO.getDepartmentName() == null) {
             departmentName = departmentMapper.selectByPrimaryKey(user.getDepartmentId()).getDepartmentName();
@@ -171,6 +167,7 @@ public class RecodeServiceImpl implements IRecodeService {
         List<UserWeekRecodeReviewDTO> dayRecodelist = new ArrayList<>();
         List<Recode> recodelist = null;
         List<String> nameList = null;
+        DateByWeekDTO dateByWeekDTO = null;
         if (recodeCondtion2DTO.getUserName().equals("ALL")) {
             //得到所有人员的姓名
             nameList = userMapper.selectAllNameByDepament(null, departmentName);
@@ -178,28 +175,39 @@ public class RecodeServiceImpl implements IRecodeService {
             nameList = new ArrayList<>();
             nameList.add(recodeCondtion2DTO.getUserName());
         }
+        String weekId = null;
         for (String name : nameList) {
             UserWeekRecodeReviewDTO userWeekRecodeReviewDTO = new UserWeekRecodeReviewDTO();
             userWeekRecodeReviewDTO.setUserName(name);
             recodelist = recodeMapper.selectUserRecodeByName7days(name, date, departmentName);
+            List<DateByWeekDTO> dateByWeekDTOList = new ArrayList<>();
             if (recodelist.size() == 0) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(DateUtil.getStringDate(date));
+                for (int i = 0; i < 7; i++) {
+                    dateByWeekDTO = new DateByWeekDTO();
+                    dateByWeekDTO.setWeekDay(WeekEnum.getByValue(i + 2).getMessage());
+                    dateByWeekDTO.setDateTime(DateUtil.getCurrentDate(calendar.getTime()));
+                    dateByWeekDTOList.add(dateByWeekDTO);
+                    calendar.add(Calendar.DATE, 1);
+                }
             } else {
-                List<DateByWeekDTO> dateByWeekDTOList = new ArrayList<>();
-                for (int i = 0;i<recodelist.size();i++){
+                for (int i = 0; i < recodelist.size(); i++) {
                     dateByWeekDTOList.add(new DateByWeekDTO());
-                    BeanUtils.copyProperties(recodelist.get(i),dateByWeekDTOList.get(i));
+                    BeanUtils.copyProperties(recodelist.get(i), dateByWeekDTOList.get(i));
                 }
-                userWeekRecodeReviewDTO.setWeeks(dateByWeekDTOList);
-                List<Review> reviewList = reviewMapper.getReviewByWeekId(recodelist.get(0).getWeekId());
-                List<WeekReviewDTO> weekReviewDTOList = new ArrayList<>();
-                for (int i = 0; i < reviewList.size(); i++) {
-                    weekReviewDTOList.add(new WeekReviewDTO());
-                    BeanUtils.copyProperties(reviewList.get(i), weekReviewDTOList.get(i));
-                    weekReviewDTOList.get(i).setReviewUser(userMapper.selectNameById(reviewList.get(i).getUserId()));
-                }
-                userWeekRecodeReviewDTO.setReviews(weekReviewDTOList);
-                dayRecodelist.add(userWeekRecodeReviewDTO);
             }
+            userWeekRecodeReviewDTO.setWeeks(dateByWeekDTOList);
+            weekId = date + StringUtils.leftPad(userMapper.selectIdByName(name), 5, "0");
+            List<Review> reviewList = reviewMapper.getReviewByWeekId(weekId);
+            List<WeekReviewDTO> weekReviewDTOList = new ArrayList<>();
+            for (int i = 0; i < reviewList.size(); i++) {
+                weekReviewDTOList.add(new WeekReviewDTO());
+                BeanUtils.copyProperties(reviewList.get(i), weekReviewDTOList.get(i));
+                weekReviewDTOList.get(i).setReviewUser(userMapper.selectNameById(reviewList.get(i).getUserId()));
+            }
+            userWeekRecodeReviewDTO.setReviews(weekReviewDTOList);
+            dayRecodelist.add(userWeekRecodeReviewDTO);
         }
         return dayRecodelist;
     }

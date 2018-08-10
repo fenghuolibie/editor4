@@ -3,10 +3,12 @@ package com.example.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 
 @Data
+@Accessors(chain = true)
 public class Recode {
     @JsonIgnore
     private Integer id;

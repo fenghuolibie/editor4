@@ -2,8 +2,10 @@ package com.example.dto.recode;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 public class RecodeCondtion2DTO {
     /**
      * all代表所有人

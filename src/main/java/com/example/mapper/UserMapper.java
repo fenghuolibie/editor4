@@ -26,18 +26,27 @@ public interface UserMapper {
     User selectUserByName(@Param("name") String name);
 
     /**
-     *
      * @param department
      * @param departmentName
      * @return
      */
-    List<String> selectAllNameByDepament(@Param("department") Integer department,@Param("departmentName") String departmentName);
+    List<String> selectAllNameByDepament(@Param("department") Integer department, @Param("departmentName") String departmentName);
 
     List<String> selectAllName();
 
     String selectNameById(@Param("id") int id);
 
+    String selectIdByName(@Param("userName") String userName);
+
     String selectLevelByName(@Param("userName") String userName);
 
+    Integer selectLevelById(int id);
 
+    /**
+     * 查询
+     * @param lowLevel
+     * @param highLevel
+     * @return
+     */
+    List<String> selectNameByLevel(@Param("lowLevel") Integer lowLevel, @Param("highLevel") Integer highLevel);
 }
