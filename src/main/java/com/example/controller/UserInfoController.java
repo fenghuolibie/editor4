@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-@Api(value = "UserInfoController",tags = "用户的注册和登录")
+@Api(value = "UserInfoController", tags = "用户的注册和登录")
 @RestController
 @RequestMapping("/api")
 public class UserInfoController {
@@ -44,7 +44,7 @@ public class UserInfoController {
 
     @ApiOperation(value = "查询当前用户部门所有人的名字", httpMethod = "GET")
     @GetMapping("v1/getDepamentAllName")
-    public CommonResult getDepamentAllName(HttpServletRequest request){
+    public CommonResult getDepamentAllName(HttpServletRequest request) {
         CommonResult commonResult = new CommonResult();
         User user = (User) request.getSession().getAttribute("userbean");
         commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
@@ -55,7 +55,7 @@ public class UserInfoController {
 
     @ApiOperation(value = "查询所有部门人的名字", httpMethod = "GET")
     @GetMapping("v1/getAllName")
-    public CommonResult getAllName(HttpServletRequest request){
+    public CommonResult getAllName(HttpServletRequest request) {
         CommonResult commonResult = new CommonResult();
 //        User user = (User) request.getSession().getAttribute("userbean");
         commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
@@ -66,12 +66,26 @@ public class UserInfoController {
 
     @ApiOperation(value = "退出登录", httpMethod = "GET")
     @GetMapping("v1/exit")
-    public CommonResult exit(HttpServletRequest request){
+    public CommonResult exit(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if(session==null){
-            return new CommonResult(ResultCode.ERROR.getCode(),"当前不存在会话",null);
+        if (session == null) {
+            return new CommonResult(ResultCode.ERROR.getCode(), "当前不存在会话", null);
         }
         session.removeAttribute("userbean");
-        return new CommonResult(ResultCode.SUCCESS.getCode(),"退出成功",null);
+        return new CommonResult(ResultCode.SUCCESS.getCode(), "退出成功", null);
+    }
+
+    @ApiOperation(value = "添加用户", httpMethod = "POST")
+    @PostMapping("v1/addUser")
+    public CommonResult addUser(HttpServletRequest request, @RequestBody User user) {
+        User userbean = (User) request.getSession().getAttribute("userbean");
+        switch (userService.addUser(userbean, user)) {
+            case 1:
+                return new CommonResult(ResultCode.SUCCESS.getCode(), "增加成功", null);
+            case 2:
+                return new CommonResult(ResultCode.ERROR.getCode(), "已存在该用户名", null);
+            default:
+                return new CommonResult(ResultCode.ERROR.getCode(), "后端报错", null);
+        }
     }
 }

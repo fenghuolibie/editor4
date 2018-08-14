@@ -2,16 +2,17 @@ package com.example.common.filter;
 
 import com.example.common.util.CommonResult;
 import net.sf.json.JSONObject;
-import org.springframework.core.annotation.Order;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.*;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Order(value = 2)
-//@WebFilter(filterName="/CodeFilter",urlPatterns={"/api/v1/*","/recode/*"}
-//        ,initParams={@WebInitParam(name ="EXCLUDED_PAGES" , value = "api/loginCheck")})
+@WebFilter(filterName="Filter2",urlPatterns={"/api/v1/*","/recode/*"}
+        ,initParams={@WebInitParam(name ="EXCLUDED_PAGES" , value = "api/loginCheck")})
 public class LoginFilter implements Filter {
 
     @Override
@@ -25,6 +26,12 @@ public class LoginFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse)servletResponse;
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
+
+        if(request.getMethod().equals(RequestMethod.OPTIONS.toString())){
+            filterChain.doFilter(servletRequest,servletResponse);
+            return;
+        }
+
         if(request.getSession().getAttribute("userbean") == null){
             response.setContentType("application/json;charset=UTF-8");
             CommonResult result = new CommonResult();

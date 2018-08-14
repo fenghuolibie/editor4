@@ -50,7 +50,6 @@ public class RecodeServiceImpl implements IRecodeService {
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public int updateUserRecode(UserDayRecodeDTO userDayRecodeDTO, User user) throws ParseException {
         int id = user.getId();
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         List<DateByWeekDTO> dateByWeekDTOlist = userDayRecodeDTO.getWeeks();
         Recode recode = new Recode();
         for (int i = 0; i < dateByWeekDTOlist.size(); i++) {

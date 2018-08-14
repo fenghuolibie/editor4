@@ -65,7 +65,7 @@ public class RecodeInfoController {
     @GetMapping("/getUserRecode")
     @ApiOperation(value = "查询当前用户指定日期所在周的日清和审核", httpMethod = "GET")
     @ApiImplicitParam(name = "dateTime", value = "表示需要查询的日期", dataType = "String", paramType = "query", required = true)
-    public CommonResult selectUserDay(HttpServletRequest request, String dateTime) throws ParseException {
+    public CommonResult selectUserDay(HttpServletRequest request, @RequestParam("dateTime") String dateTime) throws ParseException {
         if(!DateUtil.isValidDate(dateTime)){
             return new CommonResult(ResultCode.ERROR.getCode(),"日期格式错误",null);
         }

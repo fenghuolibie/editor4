@@ -23,10 +23,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.example.entity.User">
-    insert into user (id, user_code, user_name, 
+    insert into user ( user_code, user_name,
       department_id, pass_word, user_level
       )
-    values (#{id,jdbcType=INTEGER}, #{userCode,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, 
+    values ( #{userCode,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR},
       #{departmentId,jdbcType=INTEGER}, #{passWord,jdbcType=VARCHAR}, #{userLevel,jdbcType=VARCHAR}
       )
   </insert>

@@ -25,11 +25,9 @@
   </delete>
   <insert id="insert" parameterType="com.example.entity.Review">
     insert into review (id, user_id, content, 
-      state, week_id, gmt_create, 
-      gmt_modified)
+      state, week_id)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
-      #{state,jdbcType=INTEGER}, #{weekId,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
-      #{gmtModified,jdbcType=TIMESTAMP})
+      #{state,jdbcType=INTEGER}, #{weekId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.example.entity.Review">
     insert into review

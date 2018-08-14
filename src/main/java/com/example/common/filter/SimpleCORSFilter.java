@@ -1,9 +1,5 @@
 
-
-
 package com.example.common.filter;
-
-import org.springframework.core.annotation.Order;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -23,8 +19,7 @@ import java.io.IOException;
  * @see 1.8.0_151
  * @since
  */
-@Order(value = 1)
-@WebFilter(urlPatterns = "/*")
+@WebFilter(filterName = "Filter1", urlPatterns = "/*")
 public class SimpleCORSFilter implements Filter {
 
     @Override

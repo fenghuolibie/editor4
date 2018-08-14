@@ -1,9 +1,9 @@
 package com.example.controller;
 
+import com.example.common.util.DateUtil;
 import com.example.common.util.JxlsUtils;
 import com.example.dto.recode.*;
 import com.example.service.IRecodeService;
-import com.example.service.IReviewService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -17,9 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/excle")
@@ -28,26 +26,27 @@ public class ExcleConontroller {
     @Autowired
     private IRecodeService recodeService;
 
-    @Autowired
-    private IReviewService reviewService;
-
     @GetMapping("/getUserByCondition2Excle")
     @ApiOperation(value = "导出周查询的数据", httpMethod = "GET")
     @ApiImplicitParams(
-            {@ApiImplicitParam(name = "date", value = "用于表示需要查询的时间（yyyyMMdd）", paramType = "query", dataType = "String", required = true),
-                    @ApiImplicitParam(name = "userName", value = "用于表示被查寻人的姓名", paramType = "query", dataType = "String", required = true)})
-    public void getUserByCondition2Excle(HttpServletRequest request, HttpServletResponse response, @RequestParam("userName") String userName, @RequestParam("date") String date) {
+            {@ApiImplicitParam(name = "date", value = "用于表示需要查询的时间（yyyyMMdd）", paramType = "query", dataType = "String"),
+                    @ApiImplicitParam(name = "userName", value = "用于表示被查寻人的姓名", paramType = "query", dataType = "String")})
+    public void getUserByCondition2Excle(HttpServletRequest request, HttpServletResponse response, String userName, String date) {
+        RecodeCondtion2DTO recodeCondtion2DTO = null;
+        if (userName == null && date == null) {
+            recodeCondtion2DTO = new RecodeCondtion2DTO().setDate(DateUtil.getCurrentDate(new Date())).setDepartmentName("信息所").setUserName("ALL");
+        } else {
+            recodeCondtion2DTO = new RecodeCondtion2DTO().setDate(date).setUserName(userName).setDepartmentName("信息所");
+        }
         String templatePath = "classpath:templates/template.xls";
         String destFileName = "destFileName.xls";
         String[] strs = null;
         List<UserWeekRecodeReviewDTO> recodeReviewDTOS = null;
         List<DateByWeekDTO> dates = null;
-        RecodeCondtion2DTO recodeCondtion2DTO = new RecodeCondtion2DTO().setDate(date).setUserName(userName).setDepartmentName("信息所");
 
         Map<String, Object> model = new HashMap<>();
         try {
             recodeReviewDTOS = recodeService.getRecodeCondition2(recodeCondtion2DTO, request);
-            System.out.println(recodeReviewDTOS);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -112,13 +111,18 @@ public class ExcleConontroller {
         String templatePath = "classpath:templates/template1.xls";
         String destFileName = "destFileName.xls";
         String[] strs = null;
+        RecodeConditionDTO recodeConditionDTO = null;
         Map<String, Object> model = new HashMap<>();
 
-        RecodeConditionDTO recodeConditionDTO = new RecodeConditionDTO().setDateWay(dateWay).setMessage(message).setUserName(userName).setYear(year);
+        if (userName == null && year == null && message == null) {
+            recodeConditionDTO = new RecodeConditionDTO().setYear(new Integer(Calendar.getInstance().get(Calendar.YEAR)).toString()).setDateWay("按年份查看");
+        } else {
+            recodeConditionDTO = new RecodeConditionDTO().setDateWay(dateWay).setMessage(message).setUserName(userName).setYear(year);
+        }
         List<DateByWeek1DTO> list = recodeService.getRecodeCondition(recodeConditionDTO);
 
         for (DateByWeek1DTO dateByWeek1DTO : list) {
-            if(dateByWeek1DTO.getAmContent() != null && !dateByWeek1DTO.getAmContent().trim().equals("")){
+            if (dateByWeek1DTO.getAmContent() != null && !dateByWeek1DTO.getAmContent().trim().equals("")) {
                 strs = dateByWeek1DTO.getAmContent().split("&");
                 if (strs[0].equals("1")) {
                     dateByWeek1DTO.setAmContent("在" + strs[1] + "；工作内容：" + strs[2]);
@@ -126,7 +130,7 @@ public class ExcleConontroller {
                     dateByWeek1DTO.setAmContent("出差" + strs[1] + "；工作内容：" + strs[2]);
                 }
             }
-            if(dateByWeek1DTO.getPmContent() != null && !dateByWeek1DTO.getPmContent().trim().equals("")){
+            if (dateByWeek1DTO.getPmContent() != null && !dateByWeek1DTO.getPmContent().trim().equals("")) {
                 strs = dateByWeek1DTO.getPmContent().split("&");
                 if (strs[0].equals("1")) {
                     dateByWeek1DTO.setPmContent("在" + strs[1] + "；工作内容：" + strs[2]);
@@ -134,7 +138,7 @@ public class ExcleConontroller {
                     dateByWeek1DTO.setPmContent("出差" + strs[1] + "；工作内容：" + strs[2]);
                 }
             }
-            if(dateByWeek1DTO.getNightContent() != null && !dateByWeek1DTO.getNightContent().trim().equals("")){
+            if (dateByWeek1DTO.getNightContent() != null && !dateByWeek1DTO.getNightContent().trim().equals("")) {
                 strs = dateByWeek1DTO.getNightContent().split("&");
                 if (strs[0].equals("1")) {
                     dateByWeek1DTO.setNightContent("在" + strs[1] + "；工作内容：" + strs[2]);
