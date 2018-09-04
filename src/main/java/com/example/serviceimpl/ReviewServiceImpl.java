@@ -59,7 +59,6 @@ public class ReviewServiceImpl implements IReviewService {
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class, readOnly = true)
     public List<RecodeAndReviewDTO> getRecodeReciewByLevel(String dateTime, String userName) throws ParseException {
         dateTime = DateUtil.getFirstDayBy(DateUtil.getStringDate(dateTime));
-        int dateTime1 = Integer.parseInt(dateTime);
         List<String> nameList = null;
         switch (Integer.parseInt(userMapper.selectLevelByName(userName))) {
             case 4:
@@ -69,7 +68,7 @@ public class ReviewServiceImpl implements IReviewService {
                 nameList = userMapper.selectNameByLevel(2, 2);
                 break;
             case 2:
-                nameList = userMapper.selectNameByLevel(1, 1);
+                nameList = userMapper.selectNameByLevelName(userName);
                 break;
             case 1:
                 return null;
@@ -92,12 +91,6 @@ public class ReviewServiceImpl implements IReviewService {
             List<DateByWeekDTO> dateByWeekDTOList = recodeMapper.selectUserRecodeByweekId(weekId);
             if (dateByWeekDTOList.size() == 0) {
                 dateByWeekDTOList = new ArrayList<>(7);
-//                for (int i = 0; i < 7; i++) {
-//                    dateByWeekDTO = new DateByWeekDTO();
-//                    dateByWeekDTO.setDateTime(new Integer(dateTime1+i).toString());
-//                    dateByWeekDTO.setWeekDay(WeekEnum.getByValue(i+2).getMessage());
-//                    dateByWeekDTOList.add(dateByWeekDTO);
-//                }
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(DateUtil.getStringDate(dateTime));
                 for (int i = 0; i < 7; i++) {
@@ -114,6 +107,7 @@ public class ReviewServiceImpl implements IReviewService {
             userReviewDTO = new ReviewUserDTO();
             //获得相应的审批数据
             review = reviewMapper.selectReviewByUserWeekId(weekId, currentUserId);
+            System.out.println(review);
             if (review == null) {
 
             } else {

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IUserService {
 
-    String checkUser(LoginMessageDTO loginMessageDTO, HttpServletRequest httpServletRequest);
+    int checkUser(LoginMessageDTO loginMessageDTO, HttpServletRequest httpServletRequest);
 
     List<String> getDepamentAllname(int departmnet);
 

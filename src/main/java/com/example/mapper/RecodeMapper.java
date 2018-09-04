@@ -52,6 +52,9 @@ public interface RecodeMapper {
      */
     List<Recode> selectUserRecodeByName7days(@Param("userName") String userName,  @Param("dateTime") String dateTime,@Param("departmentName") String departmentName);
 
+
+    Integer selectCountRecodeByMonth(@Param("userName") String userName, @Param("dateTime") String dateTime);
+
     /**
      * 查询指定月份，和指定名称的人的日清
      *

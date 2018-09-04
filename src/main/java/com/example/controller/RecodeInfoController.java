@@ -2,12 +2,14 @@ package com.example.controller;
 
 import com.example.common.util.CommonResult;
 import com.example.common.util.DateUtil;
+import com.example.dto.recode.DateByWeek1DTO;
 import com.example.dto.recode.RecodeConditionDTO;
 import com.example.dto.recode.RecodeCondtion2DTO;
 import com.example.dto.recode.UserDayRecodeDTO;
 import com.example.entity.User;
 import com.example.enums.ResultCode;
 import com.example.service.IRecodeService;
+import com.github.pagehelper.PageInfo;
 import com.mangofactory.swagger.annotations.ApiIgnore;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -17,8 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 @Api(value = "RecodeInfoController", tags = "日清增删改查接口")
 @RestController
@@ -32,27 +33,11 @@ public class RecodeInfoController {
     @ApiOperation(value = "更新当前登录用户的数据", httpMethod = "POST")
     @ApiImplicitParam(name = "userDayRecodeDTO", value = "用于封装编辑日清所需要的数据", paramType = "body", dataType = "UserDayRecodeDTO", required = true)
     public CommonResult updateRecode(@RequestBody UserDayRecodeDTO userDayRecodeDTO, HttpServletRequest request) throws ParseException {
-        CommonResult commonResult = new CommonResult();
         User user = (User) request.getSession().getAttribute("userbean");
-        if (user == null) {
-            commonResult.setResponseCode(ResultCode.ERROR.getCode());
-            commonResult.setResponseMessage("抱歉，请先登录");
-            return commonResult;
-        }
-        if (userDayRecodeDTO == null) {
-            commonResult.setResponseCode(ResultCode.ERROR.getCode());
-            commonResult.setResponseMessage("所传参数不能为空");
-            return commonResult;
-        }
         if (recodeService.updateUserRecode(userDayRecodeDTO, user) == 1) {
-            commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
-            commonResult.setResponseMessage("更新成功");
-            return commonResult;
+            return new CommonResult(ResultCode.SUCCESS.getCode(),"更新成功",null);
         }
-        commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
-        commonResult.setResponseMessage("格式数据错误");
-        return commonResult;
-
+        return new CommonResult(ResultCode.ERROR.getCode(),"格式数据错误",null);
     }
 
     /**
@@ -69,15 +54,22 @@ public class RecodeInfoController {
         if(!DateUtil.isValidDate(dateTime)){
             return new CommonResult(ResultCode.ERROR.getCode(),"日期格式错误",null);
         }
-        Date specifyDate = DateUtil.getStringDate(dateTime);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(DateUtil.getStringDate(DateUtil.getFirstDayBy(new Date())));
-        calendar.add(Calendar.DATE, -28);
-        long time1 = specifyDate.getTime();
-        long time2 = calendar.getTime().getTime();
-        if (time1 < time2) {
-            return new CommonResult(ResultCode.ERROR.getCode(),"查询日期不能在本周的前四周之前和超过本周",null);
+        int currentYear = calendar.get(Calendar.YEAR);
+        calendar.setTime(DateUtil.getStringDate(dateTime));
+        int userYear = calendar.get(Calendar.YEAR);
+        if(currentYear != userYear){
+            return new CommonResult(ResultCode.ERROR.getCode(),"只能查询本年的日清",null);
         }
+//        Date specifyDate = DateUtil.getStringDate(dateTime);
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(DateUtil.getStringDate(DateUtil.getFirstDayBy(new Date())));
+//        calendar.add(Calendar.DATE, -28);
+//        long time1 = specifyDate.getTime();
+//        long time2 = calendar.getTime().getTime();
+//        if (time1 < time2) {
+//            return new CommonResult(ResultCode.ERROR.getCode(),"查询日期不能在本周的前四周之前和超过本周",null);
+//        }
         User user = (User) request.getSession().getAttribute("userbean");
         UserDayRecodeDTO userDayRecodeDTO = new UserDayRecodeDTO();
         userDayRecodeDTO.setWeeks(recodeService.getUserRecode(user.getId(), dateTime));
@@ -89,38 +81,32 @@ public class RecodeInfoController {
     @ApiOperation(value = "历史条件查询所有人的数据日清", httpMethod = "POST")
     @ApiImplicitParam(name = "recodeConditionDTO", value = "该参数用来封装查询条件数据数据", paramType = "body", dataType = "RecodeConditionDTO", required = true)
     public CommonResult getUserByCondition(@RequestBody RecodeConditionDTO recodeConditionDTO) {
-        CommonResult commonResult = new CommonResult();
-        commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
-        commonResult.setResponseMessage("查询成功");
-        commonResult.setResponseData(recodeService.getRecodeCondition(recodeConditionDTO));
-        return commonResult;
+        List<DateByWeek1DTO> dateByWeek1DTOS =  recodeService.getRecodeCondition(recodeConditionDTO);
+        PageInfo<DateByWeek1DTO> pageInfo = new PageInfo<>(recodeService.getRecodeCondition(recodeConditionDTO));
+        Map<String,Object> recodeMap = new HashMap();
+        recodeMap.put("pages",pageInfo.getPages());
+        recodeMap.put("total",pageInfo.getTotal());
+        recodeMap.put("currentPage",pageInfo.getPageNum());
+        recodeMap.put("recodelist",dateByWeek1DTOS);
+        return new CommonResult(ResultCode.SUCCESS.getCode(),"查询成功",recodeMap);
     }
 
     @PostMapping("/getUserByCondition2")
     @ApiOperation(value = "按周条件查询所有人的数据日清和审批", httpMethod = "POST")
     @ApiImplicitParam(name = "recodeCondtion2DTO", value = "该参数用来封装查询条件数据数据", paramType = "body", dataType = "RecodeCondtion2DTO", required = true)
     public CommonResult getUserByCondition2(@RequestBody RecodeCondtion2DTO recodeCondtion2DTO, HttpServletRequest request) throws Exception {
-        CommonResult commonResult = new CommonResult();
         if (recodeCondtion2DTO.getUserName() == null || recodeCondtion2DTO.getDate() == null || !DateUtil.isValidDate(recodeCondtion2DTO.getDate())) {
-            commonResult.setResponseCode(ResultCode.ERROR.getCode());
-            commonResult.setResponseMessage("输入参数异常");
-            return commonResult;
+            return new CommonResult(ResultCode.ERROR.getCode(),"参数不能为空",null);
         }
-        commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
-        commonResult.setResponseMessage("查询成功");
-        commonResult.setResponseData(recodeService.getRecodeCondition2(recodeCondtion2DTO, request));
-        return commonResult;
+        User user = (User) request.getSession().getAttribute("userbean");
+        return new CommonResult(ResultCode.SUCCESS.getCode(),"查询成功",recodeService.getRecodeCondition2(recodeCondtion2DTO, user));
     }
 
 
     @PostMapping("/getData")
     @ApiOperation(value = "得到服务器日期", httpMethod = "POST")
     public CommonResult getData() {
-        CommonResult commonResult = new CommonResult();
-        commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
-        commonResult.setResponseMessage("服务器时间");
-        commonResult.setResponseData(DateUtil.getCurrentDate(new Date()));
-        return commonResult;
+        return new CommonResult(ResultCode.SUCCESS.getCode(),"服务器时间",DateUtil.getCurrentDate(new Date()));
     }
 
 }

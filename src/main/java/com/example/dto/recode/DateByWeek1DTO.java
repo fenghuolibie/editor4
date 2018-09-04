@@ -27,7 +27,4 @@ public class DateByWeek1DTO {
 
     @ApiModelProperty(value = "晚上午内容",example = "晚上内容")
     private String nightContent;
-
-    @ApiModelProperty(value = "更新时间",example = "2018-08-01 11：11：11.1",hidden = true)
-    private String recodeModified;
 }

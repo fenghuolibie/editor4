@@ -22,4 +22,7 @@ public class RecodeConditionDTO {
 
     @ApiModelProperty(value = "查询方式具体",example = "01")
     private String message;
+
+    @ApiModelProperty(value = "当前页",example = "2")
+    private int currentPage;
 }

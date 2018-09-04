@@ -68,4 +68,7 @@
       department_name = #{departmentName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectALLDepartmentName" resultType="com.example.dto.department.DepartmentDTO">
+    select id departmentId,department_name departmentName from department
+  </select>
 </mapper>

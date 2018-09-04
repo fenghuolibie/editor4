@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.common.util.DateUtil;
 import com.example.common.util.JxlsUtils;
 import com.example.dto.recode.*;
+import com.example.entity.User;
 import com.example.service.IRecodeService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -32,6 +33,7 @@ public class ExcleConontroller {
             {@ApiImplicitParam(name = "date", value = "用于表示需要查询的时间（yyyyMMdd）", paramType = "query", dataType = "String"),
                     @ApiImplicitParam(name = "userName", value = "用于表示被查寻人的姓名", paramType = "query", dataType = "String")})
     public void getUserByCondition2Excle(HttpServletRequest request, HttpServletResponse response, String userName, String date) {
+        User user = (User) request.getSession().getAttribute("userbean");
         RecodeCondtion2DTO recodeCondtion2DTO = null;
         if (userName == null && date == null) {
             recodeCondtion2DTO = new RecodeCondtion2DTO().setDate(DateUtil.getCurrentDate(new Date())).setDepartmentName("信息所").setUserName("ALL");
@@ -46,7 +48,8 @@ public class ExcleConontroller {
 
         Map<String, Object> model = new HashMap<>();
         try {
-            recodeReviewDTOS = recodeService.getRecodeCondition2(recodeCondtion2DTO, request);
+            recodeReviewDTOS = recodeService.getRecodeCondition2(recodeCondtion2DTO, user);
+            System.out.println(recodeReviewDTOS);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -120,6 +123,8 @@ public class ExcleConontroller {
             recodeConditionDTO = new RecodeConditionDTO().setDateWay(dateWay).setMessage(message).setUserName(userName).setYear(year);
         }
         List<DateByWeek1DTO> list = recodeService.getRecodeCondition(recodeConditionDTO);
+
+        System.out.println(list);
 
         for (DateByWeek1DTO dateByWeek1DTO : list) {
             if (dateByWeek1DTO.getAmContent() != null && !dateByWeek1DTO.getAmContent().trim().equals("")) {

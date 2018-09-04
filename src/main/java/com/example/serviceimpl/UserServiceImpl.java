@@ -19,9 +19,6 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired
-    private DepartmentMapper departmentMapper;
-
     /**
      * 校验登录用户信息并登录
      *
@@ -30,17 +27,17 @@ public class UserServiceImpl implements IUserService {
      * @return
      */
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class, readOnly = true)
-    public String checkUser(LoginMessageDTO loginMessageDTO, HttpServletRequest Request) {
+    public int checkUser(LoginMessageDTO loginMessageDTO, HttpServletRequest Request) {
         String name = loginMessageDTO.getUserName();
         if (userMapper.selectNumByLogin(loginMessageDTO) == 0) {
-            return LoginEnum.USER_NULL.getMessage();
+            return LoginEnum.USER_NULL.getCode();
         }
         if (!userMapper.selectPasswordByName(name).equals(loginMessageDTO.getPassWord())) {
-            return LoginEnum.PASSWORD_ERROR.getMessage();
+            return LoginEnum.PASSWORD_ERROR.getCode();
         }
         User user = userMapper.selectUserByName(name);
         Request.getSession().setAttribute("userbean", user);
-        return user.getUserLevel();
+        return LoginEnum.SUCCESS.getCode();
     }
 
     @Override
@@ -49,7 +46,7 @@ public class UserServiceImpl implements IUserService {
      */
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class, readOnly = true)
     public List<String> getDepamentAllname(int depament) {
-        return userMapper.selectAllNameByDepament(depament, null);
+        return userMapper.selectAllNameByDepament(null, null);
     }
 
     @Override
@@ -69,7 +66,8 @@ public class UserServiceImpl implements IUserService {
      * @return 0,无权限；1,成功; 2，用户名已存在
      */
     public int addUser(User userbean, User user) {
-        if (userMapper.selectLevelById(userbean.getId()) != 2) {
+        int userLevel = userMapper.selectLevelById(userbean.getId());
+        if ( userLevel != 3 && userLevel != 4) {
             return 0;
         }
         if(userMapper.selectIdByName(user.getUserName()) != null){

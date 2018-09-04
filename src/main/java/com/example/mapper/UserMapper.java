@@ -19,7 +19,7 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User record);
 
-    int selectNumByLogin(LoginMessageDTO loginMessageDTO);
+    Integer selectNumByLogin(LoginMessageDTO loginMessageDTO);
 
     String selectPasswordByName(@Param("name") String name);
 
@@ -49,4 +49,6 @@ public interface UserMapper {
      * @return
      */
     List<String> selectNameByLevel(@Param("lowLevel") Integer lowLevel, @Param("highLevel") Integer highLevel);
+
+    List<String> selectNameByLevelName(@Param("userName") String userName);
 }

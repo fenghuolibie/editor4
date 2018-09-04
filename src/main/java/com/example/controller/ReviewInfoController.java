@@ -67,7 +67,7 @@ public class ReviewInfoController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "dateTime", value = "用于表示需要查询的时间（yyyyMMdd）", paramType = "query", dataType = "String", required = true),
             @ApiImplicitParam(name = "userName", value = "用于表示审查人的姓名", paramType = "query", dataType = "String", required = true)})
-    public CommonResult getReviewRecode(String dateTime, String userName) throws ParseException {
+    public CommonResult getReviewRecode(@RequestParam("dateTime") String dateTime, @RequestParam("userName") String userName) throws ParseException {
         if (dateTime == null || userName == null || dateTime.trim().length() == 0 || userName.trim().length() == 0) {
             return new CommonResult(ResultCode.ERROR.getCode(), ResultCode.ERROR.getMessage(), "输入值不能为空");
         }

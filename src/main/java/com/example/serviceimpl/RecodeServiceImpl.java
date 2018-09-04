@@ -11,6 +11,8 @@ import com.example.mapper.RecodeMapper;
 import com.example.mapper.ReviewMapper;
 import com.example.mapper.UserMapper;
 import com.example.service.IRecodeService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -34,9 +34,6 @@ public class RecodeServiceImpl implements IRecodeService {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private DepartmentMapper departmentMapper;
 
     @Autowired
     private ReviewMapper reviewMapper;
@@ -84,7 +81,7 @@ public class RecodeServiceImpl implements IRecodeService {
             for (int i = 0; i < 7; i++) {
                 recode.setWeekDay(WeekEnum.getByValue(i + 2).getMessage());
                 recode.setDateTime(DateUtil.getCurrentDate(calendar.getTime()));
-                recode.setWeekId(date + StringUtils.leftPad(new Integer(userid).toString(), 5, "0"));
+                recode.setWeekId(date + StringUtils.leftPad(Integer.toString(userid), 5, "0"));
                 recode.setState(0);
                 recodeMapper.insert(recode);
                 calendar.add(Calendar.DATE, 1);
@@ -111,12 +108,18 @@ public class RecodeServiceImpl implements IRecodeService {
         String userName = recodeConditionDTO.getUserName();
         String message = recodeConditionDTO.getMessage();
         String year = recodeConditionDTO.getYear();
-//        List<DateByWeekDTO> recodeList = null;
+        int currentPage = recodeConditionDTO.getCurrentPage();
+        //单个页面大小
+        int pageSize = 50;
+        if(recodeConditionDTO.getCurrentPage() == 0){
+            pageSize = 1000000000;
+        }
         if (userName.equals("ALL")) {
             userName = "";
         }
         if (dateWay.equals("按月份查看")) {
             String date = year + message;
+            PageHelper.startPage(currentPage, pageSize);
             return recodeMapper.selectUserRecodeByMonth(userName, date);
         } else if (dateWay.equals("按季度查看")) {
             int quarter = 0;
@@ -136,8 +139,10 @@ public class RecodeServiceImpl implements IRecodeService {
                 default:
                     return null;
             }
+            PageHelper.startPage(currentPage, pageSize);
             return recodeMapper.selectUserRecodeByQuarter(userName, quarter, year);
         } else if (dateWay.equals("按年份查看")) {
+            PageHelper.startPage(currentPage, pageSize);
             return recodeMapper.selectUserRecodeByYear(userName, year);
         }
         return null;
@@ -152,14 +157,8 @@ public class RecodeServiceImpl implements IRecodeService {
      */
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class, readOnly = true)
-    public List<UserWeekRecodeReviewDTO> getRecodeCondition2(RecodeCondtion2DTO recodeCondtion2DTO, HttpServletRequest request) throws Exception {
-        String departmentName = null;
-        User user = (User) request.getSession().getAttribute("userbean");
-        if (recodeCondtion2DTO.getDepartmentName() == null) {
-            departmentName = departmentMapper.selectByPrimaryKey(user.getDepartmentId()).getDepartmentName();
-        } else {
-            departmentName = recodeCondtion2DTO.getDepartmentName();
-        }
+    public List<UserWeekRecodeReviewDTO> getRecodeCondition2(RecodeCondtion2DTO recodeCondtion2DTO, User user) throws Exception {
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); //设置时间格式
         //得到指定日期的星期一日期
         String date = DateUtil.getFirstDayBy(sdf.parse(recodeCondtion2DTO.getDate()));
@@ -169,7 +168,7 @@ public class RecodeServiceImpl implements IRecodeService {
         DateByWeekDTO dateByWeekDTO = null;
         if (recodeCondtion2DTO.getUserName().equals("ALL")) {
             //得到所有人员的姓名
-            nameList = userMapper.selectAllNameByDepament(null, departmentName);
+            nameList = userMapper.selectAllNameByDepament(null, null);
         } else {
             nameList = new ArrayList<>();
             nameList.add(recodeCondtion2DTO.getUserName());
@@ -178,7 +177,7 @@ public class RecodeServiceImpl implements IRecodeService {
         for (String name : nameList) {
             UserWeekRecodeReviewDTO userWeekRecodeReviewDTO = new UserWeekRecodeReviewDTO();
             userWeekRecodeReviewDTO.setUserName(name);
-            recodelist = recodeMapper.selectUserRecodeByName7days(name, date, departmentName);
+            recodelist = recodeMapper.selectUserRecodeByName7days(name, date, null);
             List<DateByWeekDTO> dateByWeekDTOList = new ArrayList<>();
             if (recodelist.size() == 0) {
                 Calendar calendar = Calendar.getInstance();

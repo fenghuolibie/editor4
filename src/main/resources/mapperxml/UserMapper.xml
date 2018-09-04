@@ -104,8 +104,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectNumByLogin" parameterType="com.example.dto.userinfo.LoginMessageDTO" resultType="int">
-    SELECT count(*) FROM `user` u JOIN department d ON u.department_id = d.id
-    where  u.user_name LIKE '${userName}' AND d.department_name LIKE '${departmentName}'
+    SELECT count(*) FROM `user` u where  u.user_name LIKE '${userName}'
   </select>
   <select id="selectPasswordByName" resultType="String">
     select pass_word FROM `user` WHERE user_name like '${name}'
@@ -114,15 +113,7 @@
     select * FROM `user` WHERE user_name like '${name}'
   </select>
   <select id="selectAllNameByDepament" resultType="String">
-    SELECT user_name from `user` u join department d on u.department_id = d.id
-    <where>
-      <if test="departmentName != '' and departmentName != null">
-        and d.department_name like '${departmentName}'
-      </if>
-      <if test="department != '' and department != null">
-        and department_id = #{department}
-      </if>
-    </where>
+    SELECT user_name from `user`
     ORDER BY user_level DESC
   </select>
   <select id="selectAllName" resultType="String">
@@ -142,5 +133,9 @@
   </select>
   <select id="selectLevelById" resultType="Integer">
     SELECT user_level FROM `user` WHERE id = #{id}
+  </select>
+  <select id="selectNameByLevelName" resultType="String">
+    SELECT user_name FROM `user` where department_id = (
+    SELECT department_id FROM `user` WHERE user_name LIKE '${userName}') AND user_level = 1
   </select>
 </mapper>

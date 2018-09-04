@@ -143,12 +143,7 @@
   <select id="selectUserRecodeByName7days" resultMap="BaseResultMap">
      SELECT am_content,pm_content,night_content,week_day,date_time,week_id
      FROM recode r JOIN `user`u on r.user_id = u.id join department d on u.department_id = d.id
-     <where>
-       user_name = #{userName} and date(date_time) BETWEEN #{dateTime} and DATE_ADD(#{dateTime}, INTERVAL 6 DAY)
-       <if test="departmentName != '' and departmentName != null">
-         and d.department_name like '${departmentName}'
-       </if>
-     </where>
+     where user_name = #{userName} and date(date_time) BETWEEN #{dateTime} and DATE_ADD(#{dateTime}, INTERVAL 6 DAY)
   </select>
   <select id="selectUserRecodeByMonth" resultType="com.example.dto.recode.DateByWeek1DTO">
      SELECT u.user_name userName,am_content amContent,pm_content pmContent,night_content nightContent,week_day weekDay,date_time dateTime
@@ -190,5 +185,14 @@
     SELECT am_content amContent,pm_content pmContent,night_content nightContent,week_day weekDay,date_time dateTime,recode_modified recodeModified
     FROM recode r
     WHERE week_id like '${weekId}'
+  </select>
+  <select id="selectCountRecodeByMonth" resultType="Integer">
+    SELECT COUNT(*) FROM recode r JOIN `user`u on r.user_id = u.id
+    <where>
+      r.date_time like '${dateTime}%'
+      <if test="userName != '' and userName != null">
+        and u.user_name like '${userName}'
+      </if>
+    </where>
   </select>
 </mapper>

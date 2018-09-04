@@ -19,8 +19,8 @@ import java.io.IOException;
  * @see 1.8.0_151
  * @since
  */
-@WebFilter(filterName = "Filter1", urlPatterns = "/*")
-public class SimpleCORSFilter implements Filter {
+@WebFilter(filterName = "Filter1", urlPatterns = {"/*"})
+public class Filter0_SimpleCORS implements Filter {
 
     @Override
     public void destroy() {
@@ -28,10 +28,8 @@ public class SimpleCORSFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res,
-                         FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletResponse response = (HttpServletResponse) res;
-
         response.setHeader("Access-Control-Allow-Origin", "http://192.168.80.148:8080");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
@@ -42,7 +40,7 @@ public class SimpleCORSFilter implements Filter {
     }
 
     @Override
-    public void init(FilterConfig arg0) throws ServletException {
+    public void init(FilterConfig arg0){
 
     }
 }

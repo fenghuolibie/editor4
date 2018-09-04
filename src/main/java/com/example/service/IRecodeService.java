@@ -3,7 +3,6 @@ package com.example.service;
 import com.example.dto.recode.*;
 import com.example.entity.User;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.List;
 
@@ -14,6 +13,6 @@ public interface IRecodeService {
 
     List<DateByWeek1DTO> getRecodeCondition(RecodeConditionDTO recodeConditionDTO);
 
-    List<UserWeekRecodeReviewDTO> getRecodeCondition2(RecodeCondtion2DTO recodeCondtion2DTO, HttpServletRequest request) throws Exception;
+    List<UserWeekRecodeReviewDTO> getRecodeCondition2(RecodeCondtion2DTO recodeCondtion2DTO, User user) throws Exception;
 
 }
