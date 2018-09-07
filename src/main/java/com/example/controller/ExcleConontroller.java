@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.common.util.ContentJX;
 import com.example.common.util.DateUtil;
 import com.example.common.util.JxlsUtils;
 import com.example.dto.recode.*;
@@ -49,42 +50,31 @@ public class ExcleConontroller {
         Map<String, Object> model = new HashMap<>();
         try {
             recodeReviewDTOS = recodeService.getRecodeCondition2(recodeCondtion2DTO, user);
-            System.out.println(recodeReviewDTOS);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         for (UserWeekRecodeReviewDTO rr : recodeReviewDTOS) {
             for (DateByWeekDTO dateByWeekDTO : rr.getWeeks()) {
                 if (dateByWeekDTO.getAmContent() != null && !dateByWeekDTO.getAmContent().trim().equals("")) {
-                    strs = dateByWeekDTO.getAmContent().split("&");
-                    if (strs[0].equals("1")) {
-                        dateByWeekDTO.setAmContent("在" + strs[1] + "；工作内容：" + strs[2]);
-                    } else {
-                        dateByWeekDTO.setAmContent("出差" + strs[1] + "；工作内容：" + strs[2]);
-                    }
+                    strs = dateByWeekDTO.getAmContent().split("&", -1);
+                    dateByWeekDTO.setAmContent(ContentJX.getContent(strs));
                 }
-                if (dateByWeekDTO.getPmContent() != null && !dateByWeekDTO.getAmContent().trim().equals("")) {
-                    strs = dateByWeekDTO.getPmContent().split("&");
-                    if (strs[0].equals("1")) {
-                        dateByWeekDTO.setPmContent("在" + strs[1] + "；工作内容：" + strs[2]);
-                    } else {
-                        dateByWeekDTO.setPmContent("出差" + strs[1] + "；工作内容：" + strs[2]);
-                    }
+                if (dateByWeekDTO.getPmContent() != null && !dateByWeekDTO.getPmContent().trim().equals("")) {
+                    strs = dateByWeekDTO.getPmContent().split("&", -1);
+                    dateByWeekDTO.setPmContent(ContentJX.getContent(strs));
                 }
                 if (dateByWeekDTO.getNightContent() != null && !dateByWeekDTO.getNightContent().trim().equals("")) {
-                    strs = dateByWeekDTO.getNightContent().split("&");
-                    if (strs[0].equals("1")) {
-                        dateByWeekDTO.setNightContent("在" + strs[1] + "；工作内容：" + strs[2]);
-                    } else {
-                        dateByWeekDTO.setNightContent("出差" + strs[1] + "；工作内容：" + strs[2]);
-                    }
+                    strs = dateByWeekDTO.getNightContent().split("&", -1);
+                    dateByWeekDTO.setNightContent(ContentJX.getContent(strs));
                 }
+
             }
         }
+
         dates = recodeReviewDTOS.get(0).getWeeks();
         model.put("rerw", recodeReviewDTOS);
         model.put("weeks", dates);
-//
         OutputStream out = null;
         //设置响应
         response.setHeader("Content-disposition", "attachment; filename=" + destFileName);
@@ -123,33 +113,18 @@ public class ExcleConontroller {
             recodeConditionDTO = new RecodeConditionDTO().setDateWay(dateWay).setMessage(message).setUserName(userName).setYear(year);
         }
         List<DateByWeek1DTO> list = recodeService.getRecodeCondition(recodeConditionDTO);
-
-        System.out.println(list);
-
         for (DateByWeek1DTO dateByWeek1DTO : list) {
             if (dateByWeek1DTO.getAmContent() != null && !dateByWeek1DTO.getAmContent().trim().equals("")) {
-                strs = dateByWeek1DTO.getAmContent().split("&");
-                if (strs[0].equals("1")) {
-                    dateByWeek1DTO.setAmContent("在" + strs[1] + "；工作内容：" + strs[2]);
-                } else {
-                    dateByWeek1DTO.setAmContent("出差" + strs[1] + "；工作内容：" + strs[2]);
-                }
+                strs = dateByWeek1DTO.getAmContent().split("&", -1);
+                dateByWeek1DTO.setAmContent(ContentJX.getContent(strs));
             }
             if (dateByWeek1DTO.getPmContent() != null && !dateByWeek1DTO.getPmContent().trim().equals("")) {
-                strs = dateByWeek1DTO.getPmContent().split("&");
-                if (strs[0].equals("1")) {
-                    dateByWeek1DTO.setPmContent("在" + strs[1] + "；工作内容：" + strs[2]);
-                } else {
-                    dateByWeek1DTO.setPmContent("出差" + strs[1] + "；工作内容：" + strs[2]);
-                }
+                strs = dateByWeek1DTO.getPmContent().split("&", -1);
+                dateByWeek1DTO.setPmContent(ContentJX.getContent(strs));
             }
             if (dateByWeek1DTO.getNightContent() != null && !dateByWeek1DTO.getNightContent().trim().equals("")) {
-                strs = dateByWeek1DTO.getNightContent().split("&");
-                if (strs[0].equals("1")) {
-                    dateByWeek1DTO.setNightContent("在" + strs[1] + "；工作内容：" + strs[2]);
-                } else {
-                    dateByWeek1DTO.setNightContent("出差" + strs[1] + "；工作内容：" + strs[2]);
-                }
+                strs = dateByWeek1DTO.getNightContent().split("&", -1);
+                dateByWeek1DTO.setNightContent(ContentJX.getContent(strs));
             }
         }
 

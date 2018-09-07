@@ -52,23 +52,13 @@ public class UserInfoController {
     @ApiOperation(value = "查询当前用户部门所有人的名字", httpMethod = "GET")
     @GetMapping("v1/getDepamentAllName")
     public CommonResult getDepamentAllName(HttpServletRequest request) {
-        CommonResult commonResult = new CommonResult();
-        User user = (User) request.getSession().getAttribute("userbean");
-        commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
-        commonResult.setResponseMessage("查询成功");
-        commonResult.setResponseData(userService.getDepamentAllname(user.getDepartmentId()));
-        return commonResult;
+        return new CommonResult(ResultCode.SUCCESS.getCode(), "查询成功", userService.getDepamentAllname(0));
     }
 
     @ApiOperation(value = "查询所有部门人的名字", httpMethod = "GET")
     @GetMapping("v1/getAllName")
     public CommonResult getAllName(HttpServletRequest request) {
-        CommonResult commonResult = new CommonResult();
-//        User user = (User) request.getSession().getAttribute("userbean");
-        commonResult.setResponseCode(ResultCode.SUCCESS.getCode());
-        commonResult.setResponseMessage("查询成功");
-        commonResult.setResponseData(userService.getAllname());
-        return commonResult;
+        return new CommonResult(ResultCode.SUCCESS.getCode(), "查询成功", userService.getAllname());
     }
 
     @ApiOperation(value = "退出登录", httpMethod = "GET")
@@ -93,6 +83,23 @@ public class UserInfoController {
                 return new CommonResult(ResultCode.SUCCESS.getCode(), "增加成功", null);
             case 2:
                 return new CommonResult(ResultCode.ERROR.getCode(), "已存在该用户名", null);
+            default:
+                return new CommonResult(ResultCode.ERROR.getCode(), "后端报错", null);
+        }
+    }
+
+    @ApiOperation(value = "删除用户", httpMethod = "GET")
+    @ApiImplicitParam(name = "userName", value = "需要删除的用户姓名", paramType = "query", dataType = "String", required = true)
+    @GetMapping("v1/deleteUser")
+    public CommonResult deleteUser(HttpServletRequest request, String userName) {
+        User userbean = (User) request.getSession().getAttribute("userbean");
+        switch (userService.deleteUser(userbean, userName)) {
+            case 0:
+                return new CommonResult(ResultCode.ERROR.getCode(), "权限不足", null);
+            case 1:
+                return new CommonResult(ResultCode.SUCCESS.getCode(), "删除成功", null);
+            case 2:
+                return new CommonResult(ResultCode.ERROR.getCode(), "不存在该用户名", null);
             default:
                 return new CommonResult(ResultCode.ERROR.getCode(), "后端报错", null);
         }

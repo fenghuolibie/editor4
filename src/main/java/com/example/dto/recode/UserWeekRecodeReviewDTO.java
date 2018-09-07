@@ -13,6 +13,9 @@ public class UserWeekRecodeReviewDTO {
     @ApiModelProperty(value = "当前登录用户姓名", example = "张三")
     private String userName;
 
+    @ApiModelProperty(value = "当前登录用户等级", example = "4")
+    private String userLevel;
+
     @ApiModelProperty(value = "一周信息")
     private List<DateByWeekDTO> weeks = new ArrayList<>(7);
 

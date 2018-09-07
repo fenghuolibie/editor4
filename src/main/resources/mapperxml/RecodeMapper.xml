@@ -142,7 +142,7 @@
   </select>
   <select id="selectUserRecodeByName7days" resultMap="BaseResultMap">
      SELECT am_content,pm_content,night_content,week_day,date_time,week_id
-     FROM recode r JOIN `user`u on r.user_id = u.id join department d on u.department_id = d.id
+     FROM recode r JOIN `user`u on r.user_id = u.id
      where user_name = #{userName} and date(date_time) BETWEEN #{dateTime} and DATE_ADD(#{dateTime}, INTERVAL 6 DAY)
   </select>
   <select id="selectUserRecodeByMonth" resultType="com.example.dto.recode.DateByWeek1DTO">

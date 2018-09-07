@@ -158,7 +158,6 @@ public class RecodeServiceImpl implements IRecodeService {
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class, readOnly = true)
     public List<UserWeekRecodeReviewDTO> getRecodeCondition2(RecodeCondtion2DTO recodeCondtion2DTO, User user) throws Exception {
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd"); //设置时间格式
         //得到指定日期的星期一日期
         String date = DateUtil.getFirstDayBy(sdf.parse(recodeCondtion2DTO.getDate()));
@@ -177,6 +176,7 @@ public class RecodeServiceImpl implements IRecodeService {
         for (String name : nameList) {
             UserWeekRecodeReviewDTO userWeekRecodeReviewDTO = new UserWeekRecodeReviewDTO();
             userWeekRecodeReviewDTO.setUserName(name);
+            userWeekRecodeReviewDTO.setUserLevel(userMapper.selectLevelByName(name));
             recodelist = recodeMapper.selectUserRecodeByName7days(name, date, null);
             List<DateByWeekDTO> dateByWeekDTOList = new ArrayList<>();
             if (recodelist.size() == 0) {

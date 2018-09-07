@@ -113,8 +113,7 @@
     select * FROM `user` WHERE user_name like '${name}'
   </select>
   <select id="selectAllNameByDepament" resultType="String">
-    SELECT user_name from `user`
-    ORDER BY user_level DESC
+    SELECT user_name from `user` ORDER BY department_id,user_level DESC
   </select>
   <select id="selectAllName" resultType="String">
     SELECT user_name from `user` ORDER BY user_level DESC
@@ -138,4 +137,7 @@
     SELECT user_name FROM `user` where department_id = (
     SELECT department_id FROM `user` WHERE user_name LIKE '${userName}') AND user_level = 1
   </select>
+  <delete id="deleteUser">
+    delete from `user` where user_name like '${userName}'
+  </delete>
 </mapper>

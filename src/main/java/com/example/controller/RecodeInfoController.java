@@ -61,15 +61,6 @@ public class RecodeInfoController {
         if(currentYear != userYear){
             return new CommonResult(ResultCode.ERROR.getCode(),"只能查询本年的日清",null);
         }
-//        Date specifyDate = DateUtil.getStringDate(dateTime);
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(DateUtil.getStringDate(DateUtil.getFirstDayBy(new Date())));
-//        calendar.add(Calendar.DATE, -28);
-//        long time1 = specifyDate.getTime();
-//        long time2 = calendar.getTime().getTime();
-//        if (time1 < time2) {
-//            return new CommonResult(ResultCode.ERROR.getCode(),"查询日期不能在本周的前四周之前和超过本周",null);
-//        }
         User user = (User) request.getSession().getAttribute("userbean");
         UserDayRecodeDTO userDayRecodeDTO = new UserDayRecodeDTO();
         userDayRecodeDTO.setWeeks(recodeService.getUserRecode(user.getId(), dateTime));

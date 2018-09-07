@@ -16,4 +16,6 @@ public interface IUserService {
 
     int addUser(User userbean,User user);
 
+    int deleteUser(User userbean,String userName);
+
 }

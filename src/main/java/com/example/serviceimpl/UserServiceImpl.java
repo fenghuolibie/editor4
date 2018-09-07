@@ -61,8 +61,8 @@ public class UserServiceImpl implements IUserService {
     @Override
     /**
      * 增加用户
-     * @param userbean
-     * @param user
+     * @param userbean 当前登陆用户
+     * @param user 需要增加的用户信息
      * @return 0,无权限；1,成功; 2，用户名已存在
      */
     public int addUser(User userbean, User user) {
@@ -74,6 +74,25 @@ public class UserServiceImpl implements IUserService {
             return 2;
         }
         userMapper.insert(user);
+        return 1;
+    }
+
+    @Override
+    /**
+     * 删除用户
+     * @param userbean 当前登陆用户
+     * @param user 需要删除的用户信息
+     * @return 0,无权限；1,成功; 2，用户名不存在
+     */
+    public int deleteUser(User userbean, String userName) {
+        int userLevel = userMapper.selectLevelById(userbean.getId());
+        if ( userLevel != 3 && userLevel != 4) {
+            return 0;
+        }
+        if(userMapper.selectIdByName(userName) == null){
+            return 2;
+        }
+        userMapper.deleteUser(userName);
         return 1;
     }
 
